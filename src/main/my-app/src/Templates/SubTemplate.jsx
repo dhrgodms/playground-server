@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import {Slider} from "../Components/Slider";
 import {PageTitle} from "../Atoms/PageTitle";
-import {HamburgerIcon} from "@chakra-ui/icons";
+import {DeleteIcon, HamburgerIcon} from "@chakra-ui/icons";
 
 const SubSlider = () => {
     const navigate = useNavigate();
@@ -28,9 +28,7 @@ const SubSlider = () => {
 
     return (
         <><Flex m={'5'} width={"full"} justify={"space-between"}>
-            <Flex gap={'4'}>
                 <IconButton ref={btnRef} icon={<HamburgerIcon/>} colorScheme="green" onClick={onOpen}  aria-label={'hambuger'}/>
-            </Flex>
         </Flex>
             <Drawer
                 isOpen={isOpen}
@@ -47,6 +45,14 @@ const SubSlider = () => {
                     <DrawerBody>
                         <Flex direction={'column'} gap={'1.5em'}>
                             <Input placeholder="Type here..." />
+                            <Button
+                                ref={btnRef}
+                                colorScheme="teal"
+                                variant={'ghost'}
+                                onClick={() => navigate('/')}
+                            >
+                                메인으로
+                            </Button>
                             <Button
                                 ref={btnRef}
                                 colorScheme="red"
@@ -111,6 +117,7 @@ const SubSlider = () => {
 };
 const SubTemplate = ({children,pageTitle,titleQuery}) => {
 
+
     return (
         <>
             <Flex direction={"column"} align={'center'}>
@@ -127,6 +134,7 @@ const SubTemplate = ({children,pageTitle,titleQuery}) => {
                     <PageTitle title={pageTitle} query={titleQuery}/>
                     {Children.toArray(children)}
                 </Flex>
+
             </Flex>
         </>
     );

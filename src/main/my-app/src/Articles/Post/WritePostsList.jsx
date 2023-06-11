@@ -6,6 +6,7 @@ import MainTemplate from "../../Templates/MainTemplate";
 
 const WritePostsList = () => {
     const [writePosts, setWritePosts] = useState([{id:1,postListTile:'꾸잉',postNo:1}]);
+
     useEffect(() => {
         (writePosts?.length<2)&&axios.get('http://localhost:8080/api/post/all').then(response => setWritePosts(response.data)).catch(error=>console.log(error));
         console.log(writePosts);
@@ -18,7 +19,7 @@ const WritePostsList = () => {
               templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
           >
               {writePosts.map(item => (
-                  <PostCard key={item.id} post={item} />
+                  (item.id>1)?(<PostCard key={item.id} post={item}/>):null
               ))}
           </SimpleGrid>
       </Flex>

@@ -38,7 +38,7 @@ function UploadForm() {
                 formImageData.append('file',e.target.files[0]);
                 console.log(formImageData);
 
-                axios.post("http://localhost:8080/api/post/upload",formImageData,{
+                axios.post("http://localhost:8080/api/post/thumbnail-upload",formImageData,{
                     'Content-Type': 'multipart/form-data',
                 },)
                     .then(response => {

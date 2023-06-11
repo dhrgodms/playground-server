@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Flex, Stack, Code } from '@chakra-ui/react';
 import { PostLists } from '../Components/PostLists';
-import {
-  Heading,
-  Highlight,
-} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import {Slider} from "../Components/Slider";
 import MainTemplate from "../Templates/MainTemplate";
 const MainPage = () => {
   const navigate = useNavigate();

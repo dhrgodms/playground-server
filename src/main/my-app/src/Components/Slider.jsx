@@ -53,6 +53,14 @@ export const Slider = () => {
                             <Input placeholder="Type here..." />
                             <Button
                                 ref={btnRef}
+                                colorScheme="teal"
+                                variant={'ghost'}
+                                onClick={() => navigate('/')}
+                            >
+                                메인으로
+                            </Button>
+                            <Button
+                                ref={btnRef}
                                 colorScheme="red"
                                 variant={'ghost'}
                                 onClick={() => navigate('/recent')}

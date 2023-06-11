@@ -17,6 +17,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
+    private Long postId;
     @CreatedDate // 등록된 일시 자동 저장
     private LocalDateTime createdDate;
     @LastModifiedDate
@@ -24,6 +25,8 @@ public class Comment {
     @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"comments"})
     private Member member;
+    private String memberName;
+    private String memberPassword;
     @Version // 수정하면 버전이 바뀜
     private Long version;
 }

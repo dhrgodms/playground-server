@@ -3,12 +3,14 @@ package kr.ac.jejunu.myproject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/comment")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentDao commentDao;
-    @PostMapping
+    @PostMapping("/add")
     public Comment add(@RequestBody Comment comment){
         return commentDao.save(comment);
     }
@@ -17,4 +19,11 @@ public class CommentController {
     public Comment get(@PathVariable Long id){
         return commentDao.findById(id).get();
     }
+
+    @GetMapping("/all/{id}")
+    public List<Comment> getAllByPostId(@PathVariable Long id){
+        System.out.println(commentDao.findAllByPostId(id));
+        return commentDao.findAllByPostId(id);
+    }
+
 }
