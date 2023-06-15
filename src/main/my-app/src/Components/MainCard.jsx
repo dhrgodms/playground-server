@@ -5,12 +5,9 @@ import {
   Image,
   Heading,
   Text,
-  Button,
   Flex,
   Box,
 } from '@chakra-ui/react';
-
-import { ChatIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 import {useNavigate} from "react-router-dom";
 import React from "react";
 

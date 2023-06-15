@@ -57,7 +57,7 @@ const SubSlider = () => {
                                 ref={btnRef}
                                 colorScheme="red"
                                 variant={'ghost'}
-                                onClick={() => navigate('/recent')}
+                                onClick={() => navigate('/best')}
                             >
                                 인기글
                             </Button>
@@ -65,7 +65,7 @@ const SubSlider = () => {
                                 ref={btnRef}
                                 colorScheme="teal"
                                 variant={'ghost'}
-                                onClick={() => navigate('/best')}
+                                onClick={() => navigate('/recent')}
                             >
                                 최신글
                             </Button>

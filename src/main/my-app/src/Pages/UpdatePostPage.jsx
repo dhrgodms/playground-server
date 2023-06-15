@@ -4,21 +4,45 @@ import {
     Flex,
     Input,
     Textarea,
-    useToast, FormControl, Button, FormLabel, IconButton
+    useToast,
+    FormControl,
+    Button,
+    FormLabel,
+    IconButton,
+    useDisclosure,
+    AlertDialogOverlay,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogBody,
+    AlertDialogFooter,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton, ModalBody, ModalFooter
 } from '@chakra-ui/react';
 import axios from "axios";
 import {ArrowUpIcon, DeleteIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 import SubTemplate from "../Templates/SubTemplate";
 import DeleteAlertDialog from "../Atoms/DeleteAlertDialog";
+import * as PropTypes from "prop-types";
 
-function UpdatePostPage(){
+function Lorem(props) {
+    return null;
+}
+
+Lorem.propTypes = {count: PropTypes.number};
+
+function UpdatePostPage() {
     const id = window.location.pathname.split('/')[2];
-    const [writePost, setWritePost] = useState({id:1, thumbnail:'http://localhost:8080/white.jpg',contentTitle:""});
+    const [writePost, setWritePost] = useState({id: 1, thumbnail: 'http://localhost:8080/white.jpg', contentTitle: ""});
     const toast = useToast();
+    const {isOpen, onOpen, onClose} = useDisclosure()
+    const cancelRef = React.useRef()
 
     const [formData, setFormData] = useState({
-        user_id:1,
+        user_id: 1,
         content_title: writePost.contentTitle,
         content: writePost.content,
         thumbnail: writePost.thumbnail,
@@ -27,15 +51,30 @@ function UpdatePostPage(){
 
     useEffect(() => {
         const id = window.location.pathname.split('/')[2];
-        (writePost.id<2)&&axios.get(`http://localhost:8080/api/post/${id}`).then(response => {
+        (writePost.id < 2) && axios.get(`http://localhost:8080/api/post/${id}`).then(response => {
             setWritePost(response.data);
-        }).catch(error=>console.log(error));
+        }).catch(error => console.log(error));
 
-        setFormData({user_id:1,
+        setFormData({
+            user_id: 1,
             content_title: writePost.contentTitle,
             content: writePost.content,
-            thumbnail: writePost.thumbnail,});
-        },[writePost]);
+            thumbnail: writePost.thumbnail,
+        });
+    }, [writePost]);
+    const handleDelete = () => {
+        axios.delete(`http://localhost:8080/api/post/delete/${id}`).then(response => {
+            console.log(response);
+            toast({
+                title: "게시글 삭제 완료",
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+            });
+            navigate(-1);
+        }).catch(error => console.log(error));
+    }
+
     function onDeletePost(){
 
         axios.delete(`http://localhost:8080/api/post/delete/${id}`).then(response => {
@@ -171,7 +210,35 @@ function UpdatePostPage(){
             console.error(e);
         }
     }
+    function BasicUsage() {
+        const { isOpen, onOpen, onClose } = useDisclosure()
+        return (
+            <>
+                <Button colorScheme={"red"} style={{marginTop:'4.5rem'}} onClick={onOpen}><DeleteIcon/></Button>
 
+                <Modal isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader>정말 삭제하시겠습니까?</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <Lorem count={2} />
+                        </ModalBody>
+
+                        <ModalFooter>
+                            <Button variant='ghost' onClick={onClose}>취소</Button>
+                            <Button colorScheme='blue' mr={3} onClick={()=>{
+                                onDeletePost();
+                                onClose();
+                            }}>
+                                삭제
+                            </Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
+            </>
+        )
+    }
     return (
         <SubTemplate pageTitle={writePost.contentTitle+"   (EDITING)"} titleQuery={writePost.contentTitle}>
             <Box my={4} textAlign="left">
@@ -214,7 +281,9 @@ function UpdatePostPage(){
                         <Button type="sumbit" colorScheme="yellow" variant={'outline'}>
                             SAVE <ArrowUpIcon />
                         </Button>
-                        <IconButton icon={<DeleteIcon/>} colorScheme="blackAlpha" onClick={onDeletePost}  aria-label={'delete'}/>
+                        {/*<IconButton icon={<DeleteIcon/>} colorScheme="blackAlpha" onClick={onDeletePost}  aria-label={'delete'}/>*/}
+                        {/*<OnDeletePost />*/}
+                        <BasicUsage />
 
                     </Flex>
                 </form>

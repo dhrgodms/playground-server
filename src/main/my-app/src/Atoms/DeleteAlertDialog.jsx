@@ -11,14 +11,14 @@ import React, {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
-function DeleteAlertDialog() {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+function DeleteAlertDialog({isOpen, onOpen, onClose}) {
     const cancelRef = React.useRef()
     const toast = useToast();
     const navigate = useNavigate();
     const [id,setId] = useState(window.location.href.split('/')[2]);
 
     function onDeletePost(){
+
 
         axios.delete(`http://localhost:8080/api/post/delete/${id}`).then(response => {
             console.log(response);
@@ -56,7 +56,7 @@ function DeleteAlertDialog() {
                                 취소
                             </Button>
                             <Button colorScheme='red' onClick={()=>{
-                                onDeletePost();
+                                // onDeletePost();
                                 onClose();
                             }} ml={3}>
                                 삭제
