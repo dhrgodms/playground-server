@@ -10,21 +10,28 @@ import {
     DrawerContent,
     DrawerCloseButton, DrawerHeader, DrawerBody, Input, DrawerFooter, IconButton
 } from '@chakra-ui/react';
-import { PostLists } from '../Components/PostLists';
-import {
-    Heading,
-    Highlight,
-} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
-import {Slider} from "../Components/Slider";
 import {PageTitle} from "../Atoms/PageTitle";
 import {DeleteIcon, HamburgerIcon} from "@chakra-ui/icons";
+import axios from "axios";
+
 
 const SubSlider = () => {
+    const [mainPostsdata, setMainPostsdata] = useState([]);
+
+    const [isLoaded, setIsLoaded] = useState(false);
+
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/api/post/main-posts`).then(response => {
+            console.log(response.data);
+            setMainPostsdata(response.data);
+            setIsLoaded(true);
+        }).catch(error=>console.log(error));
+    },[]); // slider에도 반영해주어야함
 
     return (
         <><Flex m={'5'} width={"full"} justify={"space-between"}>
@@ -57,7 +64,7 @@ const SubSlider = () => {
                                 ref={btnRef}
                                 colorScheme="red"
                                 variant={'ghost'}
-                                onClick={() => navigate('/best')}
+                                onClick={() => navigate(`/post/${mainPostsdata[0]?.id}`)}
                             >
                                 인기글
                             </Button>
@@ -65,7 +72,7 @@ const SubSlider = () => {
                                 ref={btnRef}
                                 colorScheme="teal"
                                 variant={'ghost'}
-                                onClick={() => navigate('/recent')}
+                                onClick={() => navigate(`/post/${mainPostsdata[1]?.id}`)}
                             >
                                 최신글
                             </Button>
@@ -73,7 +80,7 @@ const SubSlider = () => {
                                 ref={btnRef}
                                 colorScheme="green"
                                 variant={'ghost'}
-                                onClick={() => navigate('/writes')}
+                                onClick={() => navigate(`/writes`)}
                             >
                                 생각글
                             </Button>
@@ -81,7 +88,7 @@ const SubSlider = () => {
                                 ref={btnRef}
                                 colorScheme="green"
                                 variant={'ghost'}
-                                onClick={() => navigate('/toons')}
+                                onClick={() => navigate(`/toons`)}
                             >
                                 일상만화
                             </Button>
@@ -89,7 +96,7 @@ const SubSlider = () => {
                                 ref={btnRef}
                                 colorScheme="green"
                                 variant={'ghost'}
-                                onClick={() => navigate('/playlists')}
+                                onClick={() => navigate(`/lists`)}
                             >
                                 내가 듣는 플레이리스트(Playlist)
                             </Button>
@@ -103,13 +110,6 @@ const SubSlider = () => {
                             </Button>
                         </Flex>
                     </DrawerBody>
-
-                    <DrawerFooter>
-                        <Button variant="outline" mr={3} onClick={onClose}>
-                            Cancel
-                        </Button>
-                        <Button colorScheme="blue">Save</Button>
-                    </DrawerFooter>
                 </DrawerContent>
             </Drawer>
         </>

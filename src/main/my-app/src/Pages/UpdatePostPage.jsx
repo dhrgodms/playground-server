@@ -8,13 +8,7 @@ import {
     FormControl,
     Button,
     FormLabel,
-    IconButton,
     useDisclosure,
-    AlertDialogOverlay,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogBody,
-    AlertDialogFooter,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -25,7 +19,6 @@ import axios from "axios";
 import {ArrowUpIcon, DeleteIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 import SubTemplate from "../Templates/SubTemplate";
-import DeleteAlertDialog from "../Atoms/DeleteAlertDialog";
 import * as PropTypes from "prop-types";
 
 function Lorem(props) {
@@ -96,6 +89,7 @@ function UpdatePostPage() {
 
     const SettingUserThumbnail = () => {
         const inputRef = useRef(null);
+        const deleteRef = useRef(null);
         const onUploadImage = useCallback(e => {
             if (!e.target.files) {
                 return;
@@ -127,29 +121,28 @@ function UpdatePostPage() {
             inputRef.current.click();
         },[]);
 
-        // const onDeleteImage = useCallback(e => {
-        //     if (!e.target.files) {
-        //         return;
-        //     }
-        //
-        //     const formData = new FormData();
-        //     formData.delete(inputRef.current.files[0]);
-        //
-        //     axios.post(`http://localhost:8080/api/post/delete`,formData,{
-        //         'Content-Type': 'multipart/form-data',
-        //     },)
-        //         .then(response => {
-        //             console.log(response);
-        //         })
-        //         .catch(error => {
-        //             console.error(error);
-        //         });
-        // }, []);
+        const onDeleteImage = useCallback(e => {
+            // if (!e.target.files) {
+            //     return;
+            // }
+
+            axios.get(`http://localhost:8080/api/post/thumbnail-delete/${id}`,{
+                'Content-Type': 'multipart/form-data',
+            },)
+                .then(response => {
+                    console.log(response);
+                    setFormData({...formData,thumbnail:"http://localhost:8080/thumbnail/white.jpg"});
+                    console.log(formData.thumbnail);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }, []);
 
 
         return(
             <FormControl>
-                <Flex gap={'3'} align={'center'}>
+                <Flex gap={'2'} align={'center'}>
                     <Input
                         type="file"
                         onChange={onUploadImage}
@@ -158,7 +151,8 @@ function UpdatePostPage() {
                         style={{display:"none"}}
                         name="thumbnail"
                     />
-                    <Button size={'sm'} label="이미지업로드" onClick={onUploadImageButtonClick}>+Thumbnail</Button>
+                    <Button size={'sm'} label="이미지업로드" onClick={onUploadImageButtonClick} colorScheme={'blue'}>+</Button>
+                    <Button size={'sm'} label="이미지업로드" onClick={onDeleteImage} colorScheme={'red'}>-</Button>
                     <Input
                         focusBorderColor="green"
                         size={'sm'}
@@ -225,9 +219,9 @@ function UpdatePostPage() {
                             <Lorem count={2} />
                         </ModalBody>
 
-                        <ModalFooter>
+                        <ModalFooter gap={3}>
                             <Button variant='ghost' onClick={onClose}>취소</Button>
-                            <Button colorScheme='blue' mr={3} onClick={()=>{
+                            <Button colorScheme='red' mr={3} onClick={()=>{
                                 onDeletePost();
                                 onClose();
                             }}>
@@ -269,7 +263,6 @@ function UpdatePostPage() {
                             />
                         </FormControl>
                         <SettingUserThumbnail />
-
                     </Flex>
                     <Flex
                         style={{

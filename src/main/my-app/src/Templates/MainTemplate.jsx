@@ -1,12 +1,5 @@
-import React, {Children, useEffect, useState} from 'react';
-import { Flex, Stack, Code } from '@chakra-ui/react';
-import { PostLists } from '../Components/PostLists';
-import {
-    Heading,
-    Highlight,
-} from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+import React, {Children} from 'react';
+import {Flex, Stack, Code} from '@chakra-ui/react';
 import {Slider} from "../Components/Slider";
 import {PageTitle} from "../Atoms/PageTitle";
 const MainTemplate = ({children,pageTitle,titleQuery}) => {

@@ -10,14 +10,15 @@ import {
     SimpleGrid, Stack, StackDivider,
     Textarea,
     useToast,
-    VStack, Text, CardHeader
+    VStack, Text, CardHeader, TagLeftIcon, TagLabel, Tag, Button, Image, Skeleton
 } from '@chakra-ui/react';
 import axios from "axios";
 import SubTemplate from "../../Templates/SubTemplate";
 import ScrollToTop from "../../Atoms/ScrollToTop";
-import {ArrowUpIcon, EditIcon, Icon} from "@chakra-ui/icons";
-import EditableTextArea from "../../Atoms/EditableTextArea";
+import {ArrowUpIcon, ChatIcon, EditIcon, Icon, ViewIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
+import {AiFillHeart} from "react-icons/ai";
+import MDEditor from "@uiw/react-md-editor";
 
 const WritePost = () => {
     const id = window.location.pathname.split('/')[2];
@@ -27,6 +28,8 @@ const WritePost = () => {
     const [isEditing, setIsEditing] = useState(false);
     const toast = useToast();
     const navigate = useNavigate();
+    const [images, setImages] = useState([]);
+    const [isLoaded, setIsLoaded]= useState(false);
 
     const CommentList = () => (
         <Card>
@@ -36,15 +39,15 @@ const WritePost = () => {
             <CardBody>
                 <Stack divider={<StackDivider />} spacing='2'>
                     {commentAll?.map((comment,index) =>
-                            (<Flex direction={'column'} key={index}>
-                                <Heading size='xs' textTransform='uppercase'>
-                                    {comment.memberName}
-                                </Heading>
-                                <Text pt='1' fontSize='xs'>
-                                    {comment.content}
-                                </Text>
-                            </Flex>)
-                        )
+                        (<Flex direction={'column'} key={index}>
+                            <Heading size='xs' textTransform='uppercase'>
+                                {comment.memberName}
+                            </Heading>
+                            <Text pt='1' fontSize='xs'>
+                                {comment.content}
+                            </Text>
+                        </Flex>)
+                    )
                     }
                 </Stack>
             </CardBody>
@@ -65,6 +68,7 @@ const WritePost = () => {
                     memberPassword: commentData.commentPassword,
                     content: commentData.commentContent,
                     postId: commentData.postId,
+
                 })
                 .then(res => {
                     console.log("res:",res);
@@ -89,40 +93,102 @@ const WritePost = () => {
         }
     }
 
+    async function handleLikes(e) {
+        e.preventDefault();
+        try {
+            axios
+                .get(`http://localhost:8080/api/post/like/${id}`)
+                .then(res => {
+                    console.log(res);
+                    if (res?.data) {
+                        console.log("좋아요 : ", res.data);
+                        setWritePost({...writePost,likes : res.data});
+                    } else {
+                        toast({
+                            title: `잉ㅠ좋아요 실패`,
+                            status: 'error',
+                            isClosable: true,
+                        });
+                    }
+                });
+        } catch (e) {
+            console.error(e);
+            toast({
+                title: `잉ㅠ좋아요 실패`,
+                status: 'error',
+                isClosable: true,
+            });
+        }
+    }
+
 
     useEffect(() => {
         const id = window.location.pathname.split('/')[2];
 
-        (writePost.id<2)&&axios.get(`http://localhost:8080/api/post/${id}`).then(response => setWritePost(response.data)).catch(error=>console.log(error));
+        (writePost.id<2)&&axios.get(`http://localhost:8080/api/post/${id}`).then(response => {
+            setWritePost(response.data);
+            setIsLoaded(true);
+        }).catch(error=>console.log(error));
         axios.get(`http://localhost:8080/api/comment/all/${id}`).then(response => {
             setCommentAll(response.data);
         }).catch(error=>console.log(error));
+        console.log(writePost.tag);
+        (writePost.tag===2&&images.length<1)&&axios.get(`http://localhost:8080/api/image/all/${id}`).then(response => {
+            console.log("image data:", response);
+            setImages(response.data);
+        }).catch(error=>console.log(error));
         console.log(commentAll);
+        console.log(writePost);
     },[writePost]);
 
     return (
+            <Skeleton isLoaded={isLoaded} fadeDuration={1}>
         <SubTemplate pageTitle={writePost.contentTitle} titleQuery={writePost.contentTitle}>
+            <Flex justify={"flex-end"}>
+                <IconButton icon={<EditIcon />} aria-label='editPost' onClick={()=>navigate(`/update/${id}`)}/>
+            </Flex>
             <ScrollToTop/>
+            <HStack justify={"space-between"}>
+                <Flex gap={3}>
+                    <Tag size={'md'} key={1} variant='subtle' colorScheme='gray'>
+                        <TagLeftIcon boxSize='12px' as={ViewIcon} />
+                        <TagLabel>{writePost.views}</TagLabel>
+                    </Tag>
+                    <Tag size={'md'} key={2} variant='subtle' colorScheme='cyan'>
+                        <TagLeftIcon boxSize='12px' as={ChatIcon} />
+                        <TagLabel>{commentAll.length}</TagLabel>
+                    </Tag>
+                    <Tag size={'md'} key={3} variant='subtle' colorScheme='pink'>
+                        <TagLeftIcon boxSize='12px' as={AiFillHeart} />
+                        <TagLabel>{writePost.likes}</TagLabel>
+                    </Tag>
+                </Flex>
+                <Flex justify={"flex-end"}><Button type={'submit'} onClick={handleLikes} aria-label={'likes'} colorScheme={"pink"}><AiFillHeart/>+like</Button></Flex>
+            </HStack>
             <Card>
                 <CardBody>
-                    {writePost.content}
+                    <MDEditor.Markdown source={writePost.content} style={{ whiteSpace: 'pre-wrap',backgroundColor:'white',color:'black'}} />
+                    {images.map((image,index) => (
+                        <Image key={index} src={image.url} alt={image.id} />
+                        ))}
                 </CardBody>
             </Card>
-            <IconButton icon={<EditIcon />} aria-label='editPost' onClick={()=>navigate(`/update/${id}`)}/>
             <VStack height={'100vh'} style={{ flexDirection: 'column' }}>
                 <VStack width={'75vw'} p={'5'} alignItems={'stretch'}>
+
                     <CommentList />
-                <Flex>
-                    <Input name="commentNickname" placeholder={'귀여운 닉네임'} value={commentData&&commentData.commentNickname} onChange={handleInputChange}/>
-                    <Input name="commentPassword" placeholder={'비밀번호 486'} value={commentData&&commentData.commentPassword} onChange={handleInputChange}/>
-                </Flex>
+                    <Flex>
+                        <Input name="commentNickname" placeholder={'귀여운 닉네임'} value={commentData&&commentData.commentNickname} onChange={handleInputChange}/>
+                        <Input name="commentPassword" placeholder={'비밀번호 486'} value={commentData&&commentData.commentPassword} onChange={handleInputChange}/>
+                    </Flex>
                     <Flex >
-                    <Textarea  name="commentContent" placeholder={'댓글을 입력해주세요.'} value={commentData&&commentData.commentContent} onChange={handleInputChange}/>
-                    <IconButton icon={<ArrowUpIcon/>} type={'submit'} onClick={handleCommentSubmit}  aria-label={'commentSubmit'}/>
-                        </Flex>
-                    </VStack>
+                        <Textarea  name="commentContent" placeholder={'댓글을 입력해주세요.'} value={commentData&&commentData.commentContent} onChange={handleInputChange}/>
+                        <IconButton icon={<ArrowUpIcon/>} type={'submit'} onClick={handleCommentSubmit}  aria-label={'commentSubmit'}/>
+                    </Flex>
                 </VStack>
+            </VStack>
         </SubTemplate>
+            </Skeleton>
     );
 };
 

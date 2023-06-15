@@ -3,9 +3,8 @@ import {ArrowUpIcon} from "@chakra-ui/icons";
 import React, {useCallback, useRef, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import MDEditor from "@uiw/react-md-editor";
 
-export const WriteForm = ({tag}) => {
+export const ImageForm = ({tag}) => {
     const toast = useToast();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -14,17 +13,55 @@ export const WriteForm = ({tag}) => {
         content: "내용!",
         thumbnail: "",
         // tag : 1=글, 2=그림, 3=플레이리스트
-        tag:1,
+        tag:tag,
         likes:0,
         views:0,
     });
-    const [value, setValue] = React.useState("**Hello world!!!**");
-
     function handleInputChange(event) {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
     }
-
+    async function handleSubmit(e) {
+        e.preventDefault();
+        console.log(formData);
+        try {
+            axios
+                .post('http://localhost:8080/api/post/add', {
+                    userId:formData.user_id,
+                    contentTitle: formData.content_title,
+                    content: formData.content,
+                    thumbnail: formData.thumbnail,
+                    // tag : 1=글, 2=그림, 3=플레이리스트
+                    tag:formData.tag,
+                    likes:0,
+                    views:0,
+                })
+                .then(res => {
+                    console.log("res:",res);
+                    setFormData({
+                        user_id:"",
+                        content_title: "",
+                        content: "",
+                        thumbnail: ""});
+                    if (res?.data) {
+                        toast({
+                            title: `업로드 됐나바`,
+                            status: 'success',
+                            isClosable: true,
+                        });
+                        navigate('/');
+                    } else {
+                        toast({
+                            title: `업실`,
+                            status: 'error',
+                            isClosable: true,
+                        });
+                    }
+                });
+        } catch (e) {
+            console.error(e);
+        }
+    }
     const SettingUserThumbnail = () => {
         const inputRef = useRef(null);
         const onUploadImage = useCallback(e => {
@@ -83,46 +120,44 @@ export const WriteForm = ({tag}) => {
             </FormControl>
         );
     }
-    async function handleSubmit(e) {
-        e.preventDefault();
-        console.log(formData);
-        try {
-            axios
-                .post('http://localhost:8080/api/post/add', {
-                    userId:formData.user_id,
-                    contentTitle: formData.content_title,
-                    content: value,
-                    thumbnail: formData.thumbnail,
-                    // tag : 1=글, 2=그림, 3=플레이리스트
-                    tag:tag,
-                    likes:0,
-                    views:0,
-                })
-                .then(res => {
-                    console.log("res:",res);
-                    setFormData({user_id:"",
-                        content_title: "",
-                        content: "",
-                        thumbnail: ""});
-                    if (res?.data) {
-                        toast({
-                            title: `업로드 됐나바`,
-                            status: 'success',
-                            isClosable: true,
-                        });
-                        navigate('/');
-                    } else {
-                        toast({
-                            title: `업실`,
-                            status: 'error',
-                            isClosable: true,
-                        });
-                    }
-                });
-        } catch (e) {
-            console.error(e);
+    const [fileList, setFileList] = useState(null);
+
+    const handleFileChange = (e) => {
+        setFileList(e.target.files);
+    };
+
+    const handleUploadClick = () => {
+        if (!fileList) {
+            return;
         }
-    }
+
+        // 👇 Create new FormData object and append files
+        const data = new FormData();
+        files?.forEach((file, i) => {
+            data.append(`file`, file, file.name);
+        });
+        console.log("data : ",data);
+        console.log(files);
+
+        for (let key of data.keys()) {
+            console.log(key, ":", data.get(key));
+        }
+
+        // 👇 Uploading the files using the fetch API to the server
+        axios.post('http://localhost:8080/api/image/add', data,{
+            'Content-Type': 'multipart/form-data',
+        },)
+            .then((res) => {
+                console.log(res);
+                console.log(files);
+            })
+            .then((data) => console.log(data))
+            .catch((err) => console.error(err));
+    };
+
+    // 👇 files is not an array, but it's iterable, spread to get an array of files
+    const files = fileList ? [...fileList] : [];
+
 
     return (
         <Box my={4} textAlign="left">
@@ -142,17 +177,32 @@ export const WriteForm = ({tag}) => {
                             value={formData && formData.content_title}
                         />
                     </FormControl>
-                    <FormControl>
+                    <FormControl isRequired>
                         <FormLabel>Content</FormLabel>
-                        <div className="container" data-color-mode="light" >
-                            <MDEditor
-                                value={value}
-                                onChange={setValue}
-                                height={500}
-                            />
-                        </div>
+                        <Textarea
+                            focusBorderColor="green"
+                            type="text"
+                            placeholder="..OㅅO.."
+                            onChange={handleInputChange}
+                            name="content"
+                            value={formData && formData.content}
+                        />
                     </FormControl>
                     <SettingUserThumbnail />
+                    <div>
+                        <input type="file" onChange={handleFileChange} multiple />
+
+                        <ul>
+                            {files.map((file, i) => (
+                                <li key={i}>
+                                    {file.name} - {file.type}
+                                </li>
+                            ))}
+                        </ul>
+
+                        <button type={"button"} onClick={handleUploadClick}>Upload</button>
+                    </div>
+                    {/*<SettingUploadFiles />*/}
                 </Flex>
                 <Flex
                     style={{

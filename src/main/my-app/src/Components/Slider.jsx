@@ -7,25 +7,37 @@ import {
     DrawerOverlay, Flex, Heading, IconButton, Input,
     useDisclosure
 } from "@chakra-ui/react";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {HamburgerIcon} from "@chakra-ui/icons";
+import axios from "axios";
 export const Slider = () => {
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
 
+    const [mainPostsdata, setMainPostsdata] = useState([]);
+
+    const [isLoaded, setIsLoaded] = useState(false);
+    useEffect(() => {
+        axios.get(`http://localhost:8080/api/post/main-posts`).then(response => {
+            console.log(response.data);
+            setMainPostsdata(response.data);
+            setIsLoaded(true);
+        }).catch(error=>console.log(error));
+    },[]); // slider에도 반영해주어야함
+
     return (
         <><Flex m={'5'} width={"full"} justify={"space-between"}>
             <Flex gap={'4'}>
             <IconButton ref={btnRef} icon={<HamburgerIcon/>} colorScheme="green" onClick={onOpen}  aria-label={'hambuger'}/>
-            <Button
-                ref={btnRef}
-                colorScheme="pink"
-                onClick={() => navigate('/login')}
-            >
-                LOG IN
-            </Button>
+            {/*<Button*/}
+            {/*    ref={btnRef}*/}
+            {/*    colorScheme="pink"*/}
+            {/*    onClick={() => navigate('/login')}*/}
+            {/*>*/}
+            {/*    LOG IN*/}
+            {/*</Button>*/}
             </Flex>
             <Button
                 ref={btnRef}
@@ -50,7 +62,6 @@ export const Slider = () => {
 
                     <DrawerBody>
                         <Flex direction={'column'} gap={'1.5em'}>
-                            <Input placeholder="Type here..." />
                             <Button
                                 ref={btnRef}
                                 colorScheme="teal"
@@ -61,9 +72,17 @@ export const Slider = () => {
                             </Button>
                             <Button
                                 ref={btnRef}
+                                colorScheme="teal"
+                                variant={'ghost'}
+                                onClick={() => navigate(`/all`)}
+                            >
+                                모둠글
+                            </Button>
+                            <Button
+                                ref={btnRef}
                                 colorScheme="red"
                                 variant={'ghost'}
-                                onClick={() => navigate('/best')}
+                                onClick={() => navigate(`/post/${mainPostsdata[0]?.id}`)}
                             >
                                 인기글
                             </Button>
@@ -71,7 +90,7 @@ export const Slider = () => {
                                 ref={btnRef}
                                 colorScheme="teal"
                                 variant={'ghost'}
-                                onClick={() => navigate('/recent')}
+                                onClick={() => navigate(`/post/${mainPostsdata[1]?.id}`)}
                             >
                                 최신글
                             </Button>
@@ -79,7 +98,7 @@ export const Slider = () => {
                                 ref={btnRef}
                                 colorScheme="green"
                                 variant={'ghost'}
-                                onClick={() => navigate('/writes')}
+                                onClick={() => navigate(`/writes`)}
                             >
                                 생각글
                             </Button>
@@ -87,7 +106,7 @@ export const Slider = () => {
                                 ref={btnRef}
                                 colorScheme="green"
                                 variant={'ghost'}
-                                onClick={() => navigate('/toons')}
+                                onClick={() => navigate(`/toons`)}
                             >
                                 일상만화
                             </Button>
@@ -95,7 +114,7 @@ export const Slider = () => {
                                 ref={btnRef}
                                 colorScheme="green"
                                 variant={'ghost'}
-                                onClick={() => navigate('/playlists')}
+                                onClick={() => navigate(`/lists`)}
                             >
                                 내가 듣는 플레이리스트(Playlist)
                             </Button>

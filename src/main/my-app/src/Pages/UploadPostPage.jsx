@@ -9,6 +9,8 @@ import {
 } from '@chakra-ui/react';
 import SubTemplate from "../Templates/SubTemplate";
 import {WriteForm} from "../Articles/UploadForm/WriteForm";
+import {ImageForm} from "../Articles/UploadForm/ImageForm";
+import MarkdownForm from "../Articles/UploadForm/MarkdownForm";
 function UploadForm() {
 
         return (
@@ -21,13 +23,13 @@ function UploadForm() {
                     </TabList>
                     <TabPanels>
                         <TabPanel>
-                            <WriteForm />
+                            <WriteForm tag={1}/>
                         </TabPanel>
                         <TabPanel>
-                            <p>그림을 업로드하는 폼~</p>
+                            <ImageForm tag={2} />
                         </TabPanel>
                         <TabPanel>
-                            <p>플리 업로드하는 폼~</p>
+                            <WriteForm tag={3}/>
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

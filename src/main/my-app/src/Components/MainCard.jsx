@@ -1,15 +1,17 @@
 import {
-  Card,
-  CardHeader,
-  CardFooter,
-  Image,
-  Heading,
-  Text,
-  Flex,
-  Box,
+    Card,
+    CardHeader,
+    CardFooter,
+    Image,
+    Heading,
+    Text,
+    Flex,
+    Box, Tag, TagLeftIcon, TagLabel, HStack,
 } from '@chakra-ui/react';
 import {useNavigate} from "react-router-dom";
 import React from "react";
+import {ChatIcon, ViewIcon} from "@chakra-ui/icons";
+import {AiFillHeart} from "react-icons/ai";
 
 export const MainCard = ({ ListTitle, post}) => {
     const navigate = useNavigate();
@@ -37,7 +39,7 @@ export const MainCard = ({ ListTitle, post}) => {
       />
 
       <CardFooter
-        justify="space-between"
+        justify="center"
         flexWrap="wrap"
         sx={{
           '& > button': {
@@ -45,6 +47,20 @@ export const MainCard = ({ ListTitle, post}) => {
           },
         }}
       >
+          <HStack spacing={3}>
+              <Tag size={'md'} key={1} variant='subtle' colorScheme='gray'>
+                  <TagLeftIcon boxSize='12px' as={ViewIcon} />
+                  <TagLabel>{post?.views}</TagLabel>
+              </Tag>
+              <Tag size={'md'} key={2} variant='subtle' colorScheme='cyan'>
+                  <TagLeftIcon boxSize='12px' as={ChatIcon} />
+                  <TagLabel>{post?.commentCount}</TagLabel>
+              </Tag>
+              <Tag size={'md'} key={3} variant='subtle' colorScheme='pink'>
+                  <TagLeftIcon boxSize='12px' as={AiFillHeart} />
+                  <TagLabel>{post?.likes}</TagLabel>
+              </Tag>
+          </HStack>
       </CardFooter>
     </Card>
   );

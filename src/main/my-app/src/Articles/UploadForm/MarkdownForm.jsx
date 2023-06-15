@@ -1,11 +1,11 @@
-import {Box, Button, Flex, FormControl, FormLabel, Input, Textarea, useToast} from "@chakra-ui/react";
-import {ArrowUpIcon} from "@chakra-ui/icons";
 import React, {useCallback, useRef, useState} from "react";
+import MDEditor from '@uiw/react-md-editor';
 import axios from "axios";
+import {Box, Button, Flex, FormControl, FormLabel, Input, Stack, useToast, VStack} from "@chakra-ui/react";
+import {ArrowUpIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
-import MDEditor from "@uiw/react-md-editor";
 
-export const WriteForm = ({tag}) => {
+export default function MarkdownForm() {
     const toast = useToast();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -94,7 +94,7 @@ export const WriteForm = ({tag}) => {
                     content: value,
                     thumbnail: formData.thumbnail,
                     // tag : 1=글, 2=그림, 3=플레이리스트
-                    tag:tag,
+                    tag:formData.tag,
                     likes:0,
                     views:0,
                 })
@@ -169,3 +169,4 @@ export const WriteForm = ({tag}) => {
         </Box>
     );
 }
+
