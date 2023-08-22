@@ -5,7 +5,7 @@ import {Box, Button, Flex, FormControl, FormLabel, Input, Stack, useToast, VStac
 import {ArrowUpIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 
-export default function MarkdownForm() {
+export default function MarkdownForm({tag}) {
     const toast = useToast();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -94,9 +94,10 @@ export default function MarkdownForm() {
                     content: value,
                     thumbnail: formData.thumbnail,
                     // tag : 1=글, 2=그림, 3=플레이리스트
-                    tag:formData.tag,
+                    tag:tag,
                     likes:0,
                     views:0,
+                    commentCount:0,
                 })
                 .then(res => {
                     console.log("res:",res);

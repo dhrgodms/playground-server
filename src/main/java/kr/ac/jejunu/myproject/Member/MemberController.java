@@ -2,9 +2,10 @@ package kr.ac.jejunu.myproject;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +20,16 @@ import java.util.Map;
 @RequiredArgsConstructor // 생성자 자동으로 생성-> 자동으로 의존성 주입
 public class MemberController {
     private final MemberDao memberDao;
-    private final PasswordEncoder passwordEncoder;
-    private final UserDetailsServiceImpl userService;
     @GetMapping("/{id}")
     public Member get(@PathVariable Long id){
         return memberDao.findById(id).get();
     }
 
     @GetMapping("/main")
-    public String mainPage(@AuthenticationPrincipal User user, Map<String, Object>model){
+    public String mainPage(@AuthenticationPrincipal SecurityProperties.User user, Map<String, Object>model){
         List<Member> members = memberDao.findAll();
         model.put("members", members);
-        model.put("currentMemberName", user.getUsername());
+        model.put("currentMemberName", user.getName());
         return "homepage";
     }
 
@@ -48,8 +47,8 @@ public class MemberController {
 //    }
 
     @GetMapping("/admin")
-    public String adminPage(@AuthenticationPrincipal User user, Map<String, Object> model){
-        model.put("currentAdminId", user.getUsername());
+    public String adminPage(@AuthenticationPrincipal SecurityProperties.User user, Map<String, Object> model){
+        model.put("currentAdminId", user.getName());
         return "adminpage";
     }
 
@@ -60,7 +59,7 @@ public class MemberController {
 
     @PostMapping("/user/join")
     public String memberJoin(Member memberForm){
-        memberForm.setPassword(passwordEncoder.encode(memberForm.getPassword()));
+        memberForm.setPassword(new BCryptPasswordEncoder().encode(memberForm.getPassword()));
         memberDao.save(memberForm);
         System.out.println("memberForm" + memberForm);
         return "redirect:/api/member/main";

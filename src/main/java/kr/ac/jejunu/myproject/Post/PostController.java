@@ -1,7 +1,6 @@
 package kr.ac.jejunu.myproject;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,16 +12,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/post")
 @CrossOrigin(origins = "https://localhost:3000")
 @RequiredArgsConstructor
 public class PostController {
     private final PostDao postDao;
+    private final CommentDao commentDao;
 
 
     @GetMapping("/{id}")
     public Post get(@PathVariable Long id){
+        postDao.findById(id).get().setViews(postDao.findById(id).get().getViews()+1);
+        postDao.save(postDao.findById(id).get());
         return postDao.findById(id).get();
     }
 
@@ -31,9 +34,13 @@ public class PostController {
         return postDao.findAll();
     }
 
+    @GetMapping("/tag/{id}")
+    public List<Post> getTagPosts(@PathVariable Integer id){
+        return postDao.findAllByTag(id);
+    }
+
     @PostMapping("/add")
     public Post add(@RequestBody Post post){
-        System.out.println("Post:"+post);
         return postDao.save(post);
     }
 
@@ -60,13 +67,21 @@ public class PostController {
     }
 
     @GetMapping("/main-posts")
-    public List<Post> getRecentPosts(){
+    public List<Post> getRecentPosts() {
         List<Post> postList = new ArrayList<>();
-        postList.add(postDao.findTop1ByOrderByIdDesc()); // 인기글
-        postList.add(postDao.findTop1ByOrderByIdDesc()); // 최신글
-        postList.add(postDao.findTop1ByOrderByIdDesc()); // 생각글
-        postList.add(postDao.findTop1ByOrderByIdDesc()); // 만화글
-        postList.add(postDao.findTop1ByOrderByIdDesc()); // 플리글
+        postList.add(postDao.findTop1ByOrderByViewsDesc()); // 인기글 // 조회수 내림차순 첫번째
+        postList.add(postDao.findTop1ByOrderByIdDesc()); // 최신글 // 업로드 날짜 제일 빠른 게시글
+        postList.add(postDao.findTop1ByTagOrderById(1)); // 생각글 // tag 값이 1
+        postList.add(postDao.findTop1ByTagOrderById(2)); // 만화글 // tag 값이 2
+        postList.add(postDao.findTop1ByTagOrderById(3)); // 플리글 // tag 값이 3
+
+
+        postList = postList.stream()
+                .map(post -> {
+                    List<Comment> comment = commentDao.findAllByPostId(post.getId());
+                    post.setCommentCount((long) comment.size());
+                    return post;
+                }).toList();
 
         return postList;
     }
@@ -76,4 +91,17 @@ public class PostController {
         postDao.deleteById(id);
     }
 
+    @GetMapping("/thumbnail-delete/{id}")
+    public void deleteThumbnail(@PathVariable Long id){
+        Post post = postDao.findById(id).get();
+        post.setThumbnail("http://localhost:8080/thumbnail/white.jpg");
+        postDao.save(post);
+    }
+
+    @GetMapping("/like/{id}")
+    public Long getLikes(@PathVariable Long id){
+        postDao.findById(id).get().setLikes(postDao.findById(id).get().getLikes()+1);
+        postDao.save(postDao.findById(id).get());
+        return postDao.findById(id).get().getLikes();
+    }
 }

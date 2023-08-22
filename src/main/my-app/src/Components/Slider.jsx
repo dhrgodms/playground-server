@@ -31,13 +31,13 @@ export const Slider = () => {
         <><Flex m={'5'} width={"full"} justify={"space-between"}>
             <Flex gap={'4'}>
             <IconButton ref={btnRef} icon={<HamburgerIcon/>} colorScheme="green" onClick={onOpen}  aria-label={'hambuger'}/>
-            {/*<Button*/}
-            {/*    ref={btnRef}*/}
-            {/*    colorScheme="pink"*/}
-            {/*    onClick={() => navigate('/login')}*/}
-            {/*>*/}
-            {/*    LOG IN*/}
-            {/*</Button>*/}
+            <Button
+                ref={btnRef}
+                colorScheme="pink"
+                onClick={() => navigate('/login')}
+            >
+                LOG IN
+            </Button>
             </Flex>
             <Button
                 ref={btnRef}
@@ -131,9 +131,8 @@ export const Slider = () => {
 
                     <DrawerFooter>
                         <Button variant="outline" mr={3} onClick={onClose}>
-                            Cancel
+                            close
                         </Button>
-                        <Button colorScheme="blue">Save</Button>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>

@@ -9,4 +9,11 @@ public interface PostDao extends JpaRepository<Post, Long>{
 
     List<Post> findTop5ByOrderByIdDesc();
     Post findTop1ByOrderByIdDesc();
+    Post findTop1ByTagOrderById(int tag);
+
+    Post findTop1ByOrderByViewsDesc();
+
+    Long findTopByOrderByIdDesc();
+
+    List<Post> findAllByTag(Integer tag);
 }

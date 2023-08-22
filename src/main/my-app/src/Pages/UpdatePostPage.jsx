@@ -13,13 +13,16 @@ import {
     ModalOverlay,
     ModalContent,
     ModalHeader,
-    ModalCloseButton, ModalBody, ModalFooter
+    ModalCloseButton, ModalBody, ModalFooter, Tabs, TabList, Tab, TabPanels, TabPanel, IconButton
 } from '@chakra-ui/react';
 import axios from "axios";
 import {ArrowUpIcon, DeleteIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 import SubTemplate from "../Templates/SubTemplate";
 import * as PropTypes from "prop-types";
+import {WriteForm} from "../Articles/UploadForm/WriteForm";
+import {ImageForm} from "../Articles/UploadForm/ImageForm";
+import MarkdownForm from "../Articles/UploadForm/MarkdownForm";
 
 function Lorem(props) {
     return null;
@@ -89,7 +92,6 @@ function UpdatePostPage() {
 
     const SettingUserThumbnail = () => {
         const inputRef = useRef(null);
-        const deleteRef = useRef(null);
         const onUploadImage = useCallback(e => {
             if (!e.target.files) {
                 return;
@@ -177,6 +179,10 @@ function UpdatePostPage() {
                     contentTitle: formData.content_title,
                     content: formData.content,
                     thumbnail: formData.thumbnail,
+                    tag:writePost.tag,
+                    likes:0,
+                    views:0,
+                    commentCount:0
                 })
                 .then(res => {
                     console.log("res:",res);
@@ -208,7 +214,7 @@ function UpdatePostPage() {
         const { isOpen, onOpen, onClose } = useDisclosure()
         return (
             <>
-                <Button colorScheme={"red"} style={{marginTop:'4.5rem'}} onClick={onOpen}><DeleteIcon/></Button>
+                <Button colorScheme={"blue"} style={{marginTop:'4.5rem'}} onClick={onOpen}><DeleteIcon/></Button>
 
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
@@ -235,52 +241,67 @@ function UpdatePostPage() {
     }
     return (
         <SubTemplate pageTitle={writePost.contentTitle+"   (EDITING)"} titleQuery={writePost.contentTitle}>
-            <Box my={4} textAlign="left">
-                <form
-                    onSubmit={handleSubmit}
-                    style={{ flexDirection: 'column', gap: '10px' }}
-                >
-                    <Flex direction={'column'} justify={'center'} gap={'5'}>
+                <Tabs variant='soft-rounded' colorScheme='yellow'>
+                    <TabList>
+                        <Tab>글</Tab>
+                        <Tab>그림</Tab>
+                        <Tab>플레이리스트</Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel>
+                            <Box my={4} textAlign="left">
+                                <form
+                                    onSubmit={handleSubmit}
+                                    style={{ flexDirection: 'column', gap: '10px' }}
+                                >
+                                    <Flex direction={'column'} justify={'center'} gap={'5'}>
 
-                        <FormControl isRequired>
-                            <FormLabel>Content Title</FormLabel>
-                            <Textarea
-                                focusBorderColor="green"
-                                type="text"
-                                defaultValue={formData && formData.content_title}
-                                onChange={handleInputChange}
-                                name="content_title"
-                            />
-                        </FormControl>
-                        <FormControl isRequired>
-                            <FormLabel>Content</FormLabel>
-                            <Textarea
-                                focusBorderColor="green"
-                                type="text"
-                                defaultValue={formData && formData.content}
-                                onChange={handleInputChange}
-                                name="content"
-                            />
-                        </FormControl>
-                        <SettingUserThumbnail />
-                    </Flex>
-                    <Flex
-                        style={{
-                            flexDirection: 'column',
-                            marginTop: '20px',
-                            gap: '10px',
-                        }}
-                    >
-                        <Button type="sumbit" colorScheme="yellow" variant={'outline'}>
-                            SAVE <ArrowUpIcon />
-                        </Button>
-                        {/*<IconButton icon={<DeleteIcon/>} colorScheme="blackAlpha" onClick={onDeletePost}  aria-label={'delete'}/>*/}
-                        {/*<OnDeletePost />*/}
-                        <BasicUsage />
+                                        <FormControl isRequired>
+                                            <FormLabel>Content Title</FormLabel>
+                                            <Textarea
+                                                focusBorderColor="green"
+                                                type="text"
+                                                defaultValue={formData && formData.content_title}
+                                                onChange={handleInputChange}
+                                                name="content_title"
+                                            />
+                                        </FormControl>
+                                        <FormControl isRequired>
+                                            <FormLabel>Content</FormLabel>
+                                            <Textarea
+                                                focusBorderColor="green"
+                                                type="text"
+                                                defaultValue={formData && formData.content}
+                                                onChange={handleInputChange}
+                                                name="content"
+                                            />
+                                        </FormControl>
+                                        <SettingUserThumbnail />
+                                    </Flex>
+                                    <Flex
+                                        style={{
+                                            flexDirection: 'column',
+                                            marginTop: '20px',
+                                            gap: '10px',
+                                        }}
+                                    >
+                                        <Button type="sumbit" colorScheme="yellow" variant={'outline'}>
+                                            SAVE <ArrowUpIcon />
+                                        </Button>
+                                        <BasicUsage />
 
-                    </Flex>
-                </form>
-            </Box>
+                                    </Flex>
+                                </form>
+                            </Box>
+                        </TabPanel>
+                        <TabPanel>
+                            <ImageForm tag={2} postValue={writePost}/>
+                        </TabPanel>
+                        <TabPanel>
+                            <MarkdownForm tag={3} postValue={writePost}/>
+                        </TabPanel>
+                    </TabPanels>
+                </Tabs>
         </SubTemplate>
     );
 }

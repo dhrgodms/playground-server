@@ -1,25 +1,29 @@
 import {Box, Button, Flex, FormControl, FormLabel, Input, Textarea, useToast} from "@chakra-ui/react";
 import {ArrowUpIcon} from "@chakra-ui/icons";
-import React, {useCallback, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
 
-export const WriteForm = ({tag}) => {
+export const WriteForm = ({tag, postValue}) => {
     const toast = useToast();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         user_id:1,
-        content_title: "",
-        content: "내용!",
-        thumbnail: "",
+        content_title: postValue?postValue.contentTitle:"",
+        content: postValue?postValue.content:"",
+        thumbnail: postValue?postValue.thumbnail:"",
         // tag : 1=글, 2=그림, 3=플레이리스트
-        tag:1,
-        likes:0,
-        views:0,
+        tag:postValue?postValue.tag:"",
+        likes:postValue?postValue.likes:"",
+        views:postValue?postValue.views:"",
     });
-    const [value, setValue] = React.useState("**Hello world!!!**");
+    const [value, setValue] = React.useState(postValue?postValue.content:"**Hello world!!!**");
 
+    useEffect(()=>{
+        (!postValue?.id<2)&&setValue(postValue?.content);
+        console.log(postValue);
+    },[postValue])
     function handleInputChange(event) {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
@@ -76,7 +80,7 @@ export const WriteForm = ({tag}) => {
                         colorScheme={'green'}
                         varient="filled"
                         isReadOnly={true}
-                        value={formData.thumbnail}
+                        value={postValue && postValue.thumbnail}
                     />
                 </Flex>
                 {/*<Button label="이미지 제거" onClick={onDeleteImage} />*/}
@@ -97,6 +101,7 @@ export const WriteForm = ({tag}) => {
                     tag:tag,
                     likes:0,
                     views:0,
+                    commentCount:0
                 })
                 .then(res => {
                     console.log("res:",res);
@@ -136,21 +141,20 @@ export const WriteForm = ({tag}) => {
                         <FormLabel>Content Title</FormLabel>
                         <Input
                             focusBorderColor={'green'}
-                            placeholder="..OㅅO.."
+                            defaultValue={postValue && postValue.contentTitle}
                             onChange={handleInputChange}
                             name="content_title"
-                            value={formData && formData.content_title}
                         />
                     </FormControl>
-                    <FormControl>
+                    <FormControl isRequired>
                         <FormLabel>Content</FormLabel>
-                        <div className="container" data-color-mode="light" >
-                            <MDEditor
-                                value={value}
-                                onChange={setValue}
-                                height={500}
-                            />
-                        </div>
+                        <Textarea
+                            focusBorderColor="green"
+                            type="text"
+                            defaultValue={postValue && postValue.content}
+                            onChange={handleInputChange}
+                            name="content"
+                        />
                     </FormControl>
                     <SettingUserThumbnail />
                 </Flex>
