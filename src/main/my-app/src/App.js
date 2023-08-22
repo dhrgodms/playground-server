@@ -11,6 +11,7 @@ import LoginPage from "./Pages/LoginPage";
 import UploadPostPage from "./Pages/UploadPostPage";
 import UpdatePostPage from "./Pages/UpdatePostPage";
 import AllPostsList from "./Articles/Post/AllPostsList";
+import SignUpPage from "./Pages/SignUpPage";
 
 function App() {
 
@@ -27,8 +28,8 @@ function App() {
           <Route path="/lists" element={<PlayListPost />} />
           <Route path="/all" element={<AllPostsList />} />
         <Route path="/guestbook" element={<GuestBook />} />
-          {/*<Route path="/login" element={<LoginPage />} />*/}
-          {/*<Route path="/signup" element={<LoginPage />} />*/}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
 
 
       </Routes>

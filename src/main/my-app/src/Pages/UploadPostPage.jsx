@@ -1,11 +1,5 @@
-import React, {useCallback, useRef, useState} from 'react';
-import {
-    FormControl,
-    FormLabel,
-    Input,
-    InputGroup,
-    InputRightElement,
-    Button, useToast, Flex, Box, Heading, Textarea, TabPanel, Tab, TabPanels, TabList, Tabs,
+import React from 'react';
+import {Flex, Box, TabPanel, Tab, TabPanels, TabList, Tabs,
 } from '@chakra-ui/react';
 import SubTemplate from "../Templates/SubTemplate";
 import {WriteForm} from "../Articles/UploadForm/WriteForm";
@@ -29,7 +23,7 @@ function UploadForm() {
                             <ImageForm tag={2} />
                         </TabPanel>
                         <TabPanel>
-                            <WriteForm tag={3}/>
+                            <MarkdownForm tag={3} />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

@@ -1,13 +1,11 @@
 package kr.ac.jejunu.myproject;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import kr.ac.jejunu.myproject.Post.Post;
+import kr.ac.jejunu.myproject.Post.PostDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 //@Id
 //@GeneratedValue(strategy = GenerationType.IDENTITY)
