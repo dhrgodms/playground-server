@@ -1,4 +1,4 @@
-package kr.ac.jejunu.myproject;
+package kr.ac.jejunu.myproject.Post;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,4 +16,6 @@ public interface PostDao extends JpaRepository<Post, Long>{
     Long findTopByOrderByIdDesc();
 
     List<Post> findAllByTag(Integer tag);
+
+    Post findTop1ByTagOrderByIdDesc(int i);
 }

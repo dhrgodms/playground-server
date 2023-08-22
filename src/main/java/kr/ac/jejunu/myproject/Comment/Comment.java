@@ -1,7 +1,8 @@
-package kr.ac.jejunu.myproject;
+package kr.ac.jejunu.myproject.Comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import kr.ac.jejunu.myproject.Post.Post;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,14 +18,13 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
-    private Long postId;
     @CreatedDate // 등록된 일시 자동 저장
     private LocalDateTime createdDate;
     @LastModifiedDate
     private LocalDateTime modifiedDate;
-    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"comments"})
-    private Member member;
+    @ManyToOne
+    private Post post;
     private String memberName;
     private String memberPassword;
     @Version // 수정하면 버전이 바뀜

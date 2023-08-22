@@ -1,4 +1,4 @@
-package kr.ac.jejunu.myproject;
+package kr.ac.jejunu.myproject.Image;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -1,4 +1,4 @@
-package kr.ac.jejunu.myproject;
+package kr.ac.jejunu.myproject.Comment;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

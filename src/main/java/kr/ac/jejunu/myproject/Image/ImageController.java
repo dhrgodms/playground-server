@@ -1,6 +1,7 @@
-package kr.ac.jejunu.myproject;
+package kr.ac.jejunu.myproject.Image;
 
 import jakarta.servlet.http.HttpServletRequest;
+import kr.ac.jejunu.myproject.Post.PostDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

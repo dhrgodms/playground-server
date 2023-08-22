@@ -1,4 +1,4 @@
-package kr.ac.jejunu.myproject;
+package kr.ac.jejunu.myproject.AuthUser;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -13,9 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-enum Admin {
-    TRUE, FALSE
-}
 
 @Builder
 @Data
@@ -24,19 +22,22 @@ enum Admin {
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails { //UserDetails는 시큐리티가 관리하는 객체이다.
+    enum Admin {
+        TRUE, FALSE
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "USER_SEQUENCE_ID")
+    @Column(name = "sequence_id")
     private Long userSequenceId;
 
-    @Column(name = "USER_EMAIL", nullable = false, length = 100, unique = true)
+    @Column(name = "email", nullable = false, length = 100, unique = true)
     private String userEmail;
 
-    @Column(name = "USER_BIRTH", length = 6)
+    @Column(name = "birth", length = 6)
     private String userBirth;
 
-    @Column(name = "USER_NICKNAME", length = 15)
+    @Column(name = "nickname", length = 15)
     private String userNickname;
 
     @Column(name = "ADMIN", length = 4)

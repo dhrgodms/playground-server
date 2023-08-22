@@ -1,4 +1,4 @@
-package kr.ac.jejunu.myproject;
+package kr.ac.jejunu.myproject.Post;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -25,9 +25,7 @@ public class Post {
     private LocalDateTime createdDate;
     @LastModifiedDate
     private LocalDateTime modifiedDate;
-    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"posts"})
-    private Member member;
     @Version // 수정하면 버전이 바뀜
     private Long version;
     String thumbnail;

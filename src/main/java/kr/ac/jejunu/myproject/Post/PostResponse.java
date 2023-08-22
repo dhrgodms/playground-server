@@ -1,4 +1,4 @@
-package kr.ac.jejunu.myproject;
+package kr.ac.jejunu.myproject.Post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,6 @@ public class PostResponse {
     private String contentTitle;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    private Member member;
     private Long version;
     String thumbnail;
     private int tag; // 1=글, 2=그림, 3=플레이리스트

@@ -1,6 +1,8 @@
-package kr.ac.jejunu.myproject;
+package kr.ac.jejunu.myproject.Post;
 
 import jakarta.servlet.http.HttpServletRequest;
+import kr.ac.jejunu.myproject.Comment.Comment;
+import kr.ac.jejunu.myproject.Comment.CommentDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -71,9 +73,9 @@ public class PostController {
         List<Post> postList = new ArrayList<>();
         postList.add(postDao.findTop1ByOrderByViewsDesc()); // 인기글 // 조회수 내림차순 첫번째
         postList.add(postDao.findTop1ByOrderByIdDesc()); // 최신글 // 업로드 날짜 제일 빠른 게시글
-        postList.add(postDao.findTop1ByTagOrderById(1)); // 생각글 // tag 값이 1
-        postList.add(postDao.findTop1ByTagOrderById(2)); // 만화글 // tag 값이 2
-        postList.add(postDao.findTop1ByTagOrderById(3)); // 플리글 // tag 값이 3
+        postList.add(postDao.findTop1ByTagOrderByIdDesc(1)); // 생각글 // tag 값이 1
+        postList.add(postDao.findTop1ByTagOrderByIdDesc(2)); // 만화글 // tag 값이 2
+        postList.add(postDao.findTop1ByTagOrderByIdDesc(3)); // 플리글 // tag 값이 3
 
 
         postList = postList.stream()
