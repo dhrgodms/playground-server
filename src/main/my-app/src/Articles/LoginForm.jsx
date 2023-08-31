@@ -3,8 +3,6 @@ import {
     FormControl,
     FormLabel,
     Input,
-    InputGroup,
-    InputRightElement,
     Button,
     Flex,
     Box,
@@ -18,7 +16,8 @@ const LoginForm = () => {
     const toast = useToast();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        userEmail:'testEmail@gmail.com'
+        userEmail:'testEmail@gmail.com',
+        userNickname:'testNickName',
     });
     const [user, setUser] = useState({});
     const [show, setShow] = React.useState(false);
@@ -37,34 +36,28 @@ const LoginForm = () => {
                     userEmail: formData.userEmail,
                 })
                 .then(res => {
-                    console.log("res:",res.data);
                     if (res?.data.message === "가입되지 않은 E-MAIL 입니다.") {
                         toast({
                             title: `회원정보가 존재하지 않습니다.`,
                             status: 'error',
                             isClosable: true,
                         });
-                    } else {
-                        if(res.data){
-                            axios.post('http://localhost:8080/test',{},{
-                                headers: {
-                                    Authorization: `${res.data}`,
-                                }
-                            }).then(res => {
-                                if(res.data === 'LoginSuccess') {
+                    } else if(res.data){
+                                console.log(res.data);
+                                if (res.data.userNickname === formData.userNickname) {
                                     toast({
-                                        title: `'${formData?.userEmail}' 님 환영합니다.`,
+                                        title: `'${formData?.userNickname}' 님 환영합니다.`,
                                         status: 'success',
                                         isClosable: true,
                                     });
                                     navigate('/', {replace: true});
+                                }else{
+                                    console.error("회원정보가 일치하지 않습니다.");
                                 }
-                            });
                         }else{
                             console.error("로그인 실패");
                         }
-                    }
-                });
+                    });
         } catch (e) {
             console.error(e);
         }
@@ -88,6 +81,15 @@ const LoginForm = () => {
                                 onChange={handleInputChange}
                                 name="userEmail"
                                 value={formData && formData.userEmail}
+                            />
+                        </FormControl>
+                        <FormControl isRequired>
+                            <FormLabel>Nickname</FormLabel>
+                            <Input
+                                type="text"
+                                onChange={handleInputChange}
+                                name="userNickname"
+                                value={formData && formData.userNickname}
                             />
                         </FormControl>
                         <Flex

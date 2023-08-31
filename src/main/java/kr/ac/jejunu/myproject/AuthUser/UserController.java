@@ -49,7 +49,7 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public Token login(@RequestBody Map<String, String> user, @RequestHeader("User-Agent") String userAgent){
+    public User login(@RequestBody Map<String, String> user, @RequestHeader("User-Agent") String userAgent){
         log.info("user email = {}", user.get("userEmail"));
         log.info("user agent = {}", userAgent);
 
@@ -59,7 +59,8 @@ public class UserController {
         Token tokenDto = jwtTokenProvider.createAccessToken(member.getUsername(), member.getRoles());
 
         jwtService.login(tokenDto, userAgent);
-        return tokenDto;
+
+        return member;
     }
 
 }
