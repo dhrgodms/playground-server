@@ -3,7 +3,7 @@ spring:
     url: jdbc:mysql://localhost:3306/jeju?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: jeju
-    password: jejujejupwpw
+    password: jejujejupw
   jpa:
     hibernate:
       ddl-auto: update

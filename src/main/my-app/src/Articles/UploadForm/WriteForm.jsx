@@ -12,7 +12,7 @@ export const WriteForm = ({tag, postValue}) => {
         user_id:1,
         content_title: postValue?postValue.contentTitle:"",
         content: postValue?postValue.content:"",
-        thumbnail: postValue?postValue.thumbnail:"",
+        thumbnail: postValue?postValue.thumbnail:"http://localhost:8080/thumbnail/white.JPG",
         // tag : 1=글, 2=그림, 3=플레이리스트
         tag:postValue?postValue.tag:"",
         likes:postValue?postValue.likes:"",

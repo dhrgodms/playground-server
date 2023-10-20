@@ -20,6 +20,10 @@ export const MainCard = ({ ListTitle, post}) => {
     const  handleCardClick = () => {
         navigate(`/post/${post.id}`);
     };
+
+    const trimContentTitle = (title)=>{
+        return title?.length>10?title.slice(0,10)+"...":title;
+    }
   return (
       <Card maxW="md" style={{cursor:'pointer'}} onClick={handleCardClick} ref={btnRef}>
       <CardHeader>
@@ -27,7 +31,7 @@ export const MainCard = ({ ListTitle, post}) => {
           <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
             <Box>
               <Heading size="lg">{ListTitle}</Heading>
-              <Text>{"<"+post?.contentTitle+">"}</Text>
+              <Text>{"<"+trimContentTitle(post?.contentTitle)+">"}</Text>
             </Box>
           </Flex>
         </Flex>

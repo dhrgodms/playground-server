@@ -22,7 +22,7 @@ import MDEditor from "@uiw/react-md-editor";
 
 const WritePost = () => {
     const id = window.location.pathname.split('/')[2];
-    const [commentData, setCommentData] = useState({commentContent:'',commentNickname:'',commentPassword:'',postId:id});
+    const [commentData, setCommentData] = useState({commentContent:'',commentNickname:'',commentPassword:'',post:''});
     const [writePost, setWritePost] = useState({id:1, thumbnail:'http://localhost:8080/white.jpg',contentTitle:""});
     const [commentAll, setCommentAll] = useState([{commentContent:'',commentNickname:'',commentPassword:'',postId:id}]);
     const [isEditing, setIsEditing] = useState(false);
@@ -67,12 +67,12 @@ const WritePost = () => {
                     memberName: commentData.commentNickname,
                     memberPassword: commentData.commentPassword,
                     content: commentData.commentContent,
-                    postId: commentData.postId,
+                    post: writePost,
 
                 })
                 .then(res => {
                     console.log("res:",res);
-                    setCommentData({commentContent:'',commentNickname:'',commentPassword:'',postId:id});
+                    setCommentData({commentContent:'',commentNickname:'',commentPassword:'',post: writePost});
                     setCommentAll([...commentAll, res.data]);
                     if (res?.data) {
                         toast({
@@ -159,11 +159,11 @@ const WritePost = () => {
                         <TagLabel>{commentAll.length}</TagLabel>
                     </Tag>
                     <Tag size={'md'} key={3} variant='subtle' colorScheme='pink'>
-                        <TagLeftIcon boxSize='12px' as={AiFillHeart} />
+                        <TagLeftIcon boxSiz e='12px' as={AiFillHeart} />
                         <TagLabel>{writePost.likes}</TagLabel>
                     </Tag>
                 </Flex>
-                <Flex justify={"flex-end"}><Button type={'submit'} onClick={handleLikes} aria-label={'likes'} colorScheme={"pink"}><AiFillHeart/>+like</Button></Flex>
+                <Flex justify={"flex-end"}><Button type={'submit'} onClick={handleLikes} aria-label={'likes'} colorScheme={"pink"}><AiFillHeart/></Button></Flex>
             </HStack>
             <Card>
                 <CardBody>

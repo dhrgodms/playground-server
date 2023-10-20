@@ -12,6 +12,7 @@ public class CommentController {
     private final CommentDao commentDao;
     @PostMapping("/add")
     public Comment add(@RequestBody Comment comment){
+        System.out.println(comment);
         return commentDao.save(comment);
     }
 

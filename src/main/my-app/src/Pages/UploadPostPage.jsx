@@ -13,7 +13,7 @@ function UploadForm() {
                     <TabList>
                         <Tab>글</Tab>
                         <Tab>그림</Tab>
-                        <Tab>플레이리스트</Tab>
+                        <Tab>Markdown</Tab>
                     </TabList>
                     <TabPanels>
                         <TabPanel>
