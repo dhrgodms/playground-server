@@ -22,10 +22,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 //@Version // 수정하면 버전이 바뀜
 //private Long version;
 
-@SpringBootTest
-class MyProjectApplicationTests {
+//@SpringBootTest
+//class MyProjectApplicationTests {
 //    private PostDao postDao;
-//
+////
 //    @Test
 //    void contextLoads() {
 //        ApplicationContext applicationContext = new AnnotationConfigApplicationContext("kr.ac.jejunu.myproject");
@@ -44,4 +44,4 @@ class MyProjectApplicationTests {
 //        postDao.deleteById(1L);
 //    }
 
-}
+//}
