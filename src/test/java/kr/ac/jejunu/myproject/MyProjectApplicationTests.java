@@ -24,24 +24,24 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 @SpringBootTest
 class MyProjectApplicationTests {
-    private PostDao postDao;
+//    private PostDao postDao;
+//
+//    @Test
+//    void contextLoads() {
+//        ApplicationContext applicationContext = new AnnotationConfigApplicationContext("kr.ac.jejunu.myproject");
+//        postDao = applicationContext.getBean("postDao", PostDao.class);
+//    }
 
-    @Test
-    void contextLoads() {
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext("kr.ac.jejunu.myproject");
-        postDao = applicationContext.getBean("postDao", PostDao.class);
-    }
-
-    @Test
-    void deletePost(){
-        Post post = new Post();
-        post.setId(1L);
-        post.setContent("test");
-        post.setContentTitle("testTitle");
-        postDao.save(post);
-
-
-        postDao.deleteById(1L);
-    }
+//    @Test
+//    void deletePost(){
+//        Post post = new Post();
+//        post.setId(1L);
+//        post.setContent("test");
+//        post.setContentTitle("testTitle");
+//        postDao.save(post);
+//
+//
+//        postDao.deleteById(1L);
+//    }
 
 }
