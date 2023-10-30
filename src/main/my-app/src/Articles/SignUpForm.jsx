@@ -37,7 +37,7 @@ const SignUpForm = () => {
         console.log(formData);
         try {
             axios
-                .post('http://211.226.190.123:2023/join', {
+                .post('http://localhost:8080/join', {
                     userEmail: formData.userEmail,
                     userBirth: formData.userBirth,
                     userNickname: formData.userNickname,

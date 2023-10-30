@@ -41,7 +41,7 @@ export const WriteForm = ({tag, postValue}) => {
             formImageData.append('file',e.target.files[0]);
             console.log(formImageData);
 
-            axios.post("http://211.226.190.123:2023/api/post/thumbnail-upload",formImageData,{
+            axios.post("http://localhost:8080/api/post/thumbnail-upload",formImageData,{
                 'Content-Type': 'multipart/form-data',
             },)
                 .then(response => {
@@ -92,7 +92,7 @@ export const WriteForm = ({tag, postValue}) => {
         console.log(formData);
         try {
             axios
-                .post('http://211.226.190.123:2023/api/post/add', {
+                .post('http://localhost:8080/api/post/add', {
                     userId:formData.user_id,
                     contentTitle: formData.content_title,
                     content: value,

@@ -63,7 +63,7 @@ const WritePost = () => {
         console.log(commentData);
         try {
             axios
-                .post('http://211.226.190.123:2023/api/comment/add', {
+                .post('http://localhost:8080/api/comment/add', {
                     memberName: commentData.commentNickname,
                     memberPassword: commentData.commentPassword,
                     content: commentData.commentContent,
@@ -97,7 +97,7 @@ const WritePost = () => {
         e.preventDefault();
         try {
             axios
-                .get(`http://211.226.190.123:2023/api/post/like/${id}`)
+                .get(`http://localhost:8080/api/post/like/${id}`)
                 .then(res => {
                     console.log(res);
                     if (res?.data) {
@@ -125,15 +125,15 @@ const WritePost = () => {
     useEffect(() => {
         const id = window.location.pathname.split('/')[2];
 
-        (writePost.id<2)&&axios.get(`http://211.226.190.123:2023/api/post/${id}`).then(response => {
+        (writePost.id<2)&&axios.get(`http://localhost:8080/api/post/${id}`).then(response => {
             setWritePost(response.data);
             setIsLoaded(true);
         }).catch(error=>console.log(error));
-        axios.get(`http://211.226.190.123:2023/api/comment/all/${id}`).then(response => {
+        axios.get(`http://localhost:8080/api/comment/all/${id}`).then(response => {
             setCommentAll(response.data);
         }).catch(error=>console.log(error));
         console.log(writePost.tag);
-        (writePost.tag===2&&images.length<1)&&axios.get(`http://211.226.190.123:2023/api/image/all/${id}`).then(response => {
+        (writePost.tag===2&&images.length<1)&&axios.get(`http://localhost:8080/api/image/all/${id}`).then(response => {
             console.log("image data:", response);
             setImages(response.data);
         }).catch(error=>console.log(error));

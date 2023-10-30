@@ -47,7 +47,7 @@ function UpdatePostPage() {
 
     useEffect(() => {
         const id = window.location.pathname.split('/')[2];
-        (writePost.id < 2) && axios.get(`http://211.226.190.123:2023/api/post/${id}`).then(response => {
+        (writePost.id < 2) && axios.get(`http://localhost:8080/api/post/${id}`).then(response => {
             setWritePost(response.data);
         }).catch(error => console.log(error));
 
@@ -59,7 +59,7 @@ function UpdatePostPage() {
         });
     }, [writePost]);
     const handleDelete = () => {
-        axios.delete(`http://211.226.190.123:2023/api/post/delete/${id}`).then(response => {
+        axios.delete(`http://localhost:8080/api/post/delete/${id}`).then(response => {
             console.log(response);
             toast({
                 title: "게시글 삭제 완료",
@@ -73,7 +73,7 @@ function UpdatePostPage() {
 
     function onDeletePost(){
 
-        axios.delete(`http://211.226.190.123:2023/api/post/delete/${id}`).then(response => {
+        axios.delete(`http://localhost:8080/api/post/delete/${id}`).then(response => {
             console.log(response);
             toast({
                 title: "게시글 삭제 완료",
@@ -102,7 +102,7 @@ function UpdatePostPage() {
             formImageData.append('file',e.target.files[0]);
             console.log(formImageData);
 
-            axios.post("http://211.226.190.123:2023/api/post/thumbnail-upload",formImageData,{
+            axios.post("http://localhost:8080/api/post/thumbnail-upload",formImageData,{
                 'Content-Type': 'multipart/form-data',
             },)
                 .then(response => {
@@ -128,7 +128,7 @@ function UpdatePostPage() {
             //     return;
             // }
 
-            axios.get(`http://211.226.190.123:2023/api/post/thumbnail-delete/${id}`,{
+            axios.get(`http://localhost:8080/api/post/thumbnail-delete/${id}`,{
                 'Content-Type': 'multipart/form-data',
             },)
                 .then(response => {
@@ -173,7 +173,7 @@ function UpdatePostPage() {
         console.log(formData);
         try {
             axios
-                .post('http://211.226.190.123:2023/api/post/update', {
+                .post('http://localhost:8080/api/post/update', {
                     id:id,
                     userId:formData.user_id,
                     contentTitle: formData.content_title,

@@ -32,7 +32,7 @@ const LoginForm = () => {
         console.log(formData);
         try {
             axios
-                .post('http://211.226.190.123:2023/login', {
+                .post('http://localhost:8080/login', {
                     userEmail: formData.userEmail,
                 })
                 .then(res => {
