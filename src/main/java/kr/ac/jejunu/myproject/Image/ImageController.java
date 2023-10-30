@@ -37,7 +37,7 @@ public class ImageController {
             bufferedOutputStream.write(file.getBytes());
             bufferedOutputStream.close();
 
-            uploadedFilesUrls.add("http://localhost:8080/images/" + file.getOriginalFilename());
+            uploadedFilesUrls.add("http://211.226.190.123:2023/images/" + file.getOriginalFilename());
         }
 
         for (String url : uploadedFilesUrls){

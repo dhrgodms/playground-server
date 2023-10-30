@@ -24,7 +24,7 @@ export const PostLists = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/post/main-posts`).then(response => {
+    axios.get(`http://211.226.190.123:2023/api/post/main-posts`).then(response => {
       console.log(response.data);
       setMainPostsdata(response.data);
       setIsLoaded(true);
@@ -49,7 +49,7 @@ export const PostLists = () => {
           </CardHeader>
           <Image
               objectFit="cover"
-              src={"http://localhost:8080/thumbnail/5_thumb.jpg"}
+              src={"http://211.226.190.123:2023/thumbnail/5_thumb.jpg"}
               alt="Chakra UI"
           />
 

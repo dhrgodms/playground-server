@@ -9,7 +9,7 @@ const WritePostsList = () => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        (writePosts?.length<2)&&axios.get('http://localhost:8080/api/post/tag/1').then(response => {
+        (writePosts?.length<2)&&axios.get('http://211.226.190.123:2023/api/post/tag/1').then(response => {
             setWritePosts(response.data);
             setIsLoaded(true);
         }).catch(error=>console.log(error));

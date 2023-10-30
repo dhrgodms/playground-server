@@ -26,7 +26,7 @@ const SubSlider = () => {
     const btnRef = React.useRef();
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/post/main-posts`).then(response => {
+        axios.get(`http://211.226.190.123:2023/api/post/main-posts`).then(response => {
             console.log(response.data);
             setMainPostsdata(response.data);
             setIsLoaded(true);

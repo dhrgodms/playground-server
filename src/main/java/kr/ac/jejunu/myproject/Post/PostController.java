@@ -55,7 +55,7 @@ public class PostController {
         bufferedOutputStream.write(file.getBytes());
         bufferedOutputStream.close();
 
-        return "http://localhost:8080/thumbnail/" + file.getOriginalFilename();
+        return "http://211.226.190.123:2023/thumbnail/" + file.getOriginalFilename();
     }
 
     @PostMapping("/update")
@@ -96,7 +96,7 @@ public class PostController {
     @GetMapping("/thumbnail-delete/{id}")
     public void deleteThumbnail(@PathVariable Long id){
         Post post = postDao.findById(id).get();
-        post.setThumbnail("http://localhost:8080/thumbnail/white.jpg");
+        post.setThumbnail("http://211.226.190.123:2023/thumbnail/white.jpg");
         postDao.save(post);
     }
 
