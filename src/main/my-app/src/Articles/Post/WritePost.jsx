@@ -23,7 +23,7 @@ import MDEditor from "@uiw/react-md-editor";
 const WritePost = () => {
     const id = window.location.pathname.split('/')[2];
     const [commentData, setCommentData] = useState({commentContent:'',commentNickname:'',commentPassword:'',post:''});
-    const [writePost, setWritePost] = useState({id:1, thumbnail:'http://211.226.190.123:2023/white.jpg',contentTitle:""});
+    const [writePost, setWritePost] = useState({id:1, thumbnail:'http://localhost:8080/white.jpg',contentTitle:""});
     const [commentAll, setCommentAll] = useState([{commentContent:'',commentNickname:'',commentPassword:'',postId:id}]);
     const [isEditing, setIsEditing] = useState(false);
     const toast = useToast();

@@ -49,7 +49,7 @@ export const PostLists = () => {
           </CardHeader>
           <Image
               objectFit="cover"
-              src={"http://211.226.190.123:2023/thumbnail/5_thumb.jpg"}
+              src={"http://localhost:8080/thumbnail/5_thumb.jpg"}
               alt="Chakra UI"
           />
 

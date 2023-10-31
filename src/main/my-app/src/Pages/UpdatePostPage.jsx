@@ -32,7 +32,7 @@ Lorem.propTypes = {count: PropTypes.number};
 
 function UpdatePostPage() {
     const id = window.location.pathname.split('/')[2];
-    const [writePost, setWritePost] = useState({id: 1, thumbnail: 'http://211.226.190.123:2023/white.jpg', contentTitle: ""});
+    const [writePost, setWritePost] = useState({id: 1, thumbnail: 'http://localhost:8080/white.jpg', contentTitle: ""});
     const toast = useToast();
     const {isOpen, onOpen, onClose} = useDisclosure()
     const cancelRef = React.useRef()
@@ -133,7 +133,7 @@ function UpdatePostPage() {
             },)
                 .then(response => {
                     console.log(response);
-                    setFormData({...formData,thumbnail:"http://211.226.190.123:2023/thumbnail/white.jpg"});
+                    setFormData({...formData,thumbnail:"http://localhost:8080/thumbnail/white.jpg"});
                     console.log(formData.thumbnail);
                 })
                 .catch(error => {
