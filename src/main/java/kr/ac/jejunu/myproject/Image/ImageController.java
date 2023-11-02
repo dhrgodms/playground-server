@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/image")
-@CrossOrigin(origins = "https://localhost:3000")
+@CrossOrigin(origins = "http://ok-archive.com:1004")
 @RequiredArgsConstructor
 public class ImageController {
     private final ImageDao imageDao;
@@ -37,7 +37,7 @@ public class ImageController {
             bufferedOutputStream.write(file.getBytes());
             bufferedOutputStream.close();
 
-            uploadedFilesUrls.add("http://211.226.190.123:2023/images/" + file.getOriginalFilename());
+            uploadedFilesUrls.add("http://ok-archive.com:2023/images/" + file.getOriginalFilename());
         }
 
         for (String url : uploadedFilesUrls){
