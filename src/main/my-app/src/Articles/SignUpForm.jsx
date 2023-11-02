@@ -37,7 +37,7 @@ const SignUpForm = () => {
         console.log(formData);
         try {
             axios
-                .post('http://ok-archive:2023/join', {
+                .post('http://ok-archive.com:2023/join', {
                     userEmail: formData.userEmail,
                     userBirth: formData.userBirth,
                     userNickname: formData.userNickname,

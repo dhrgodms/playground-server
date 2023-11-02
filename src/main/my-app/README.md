@@ -9,7 +9,7 @@ In the project directory, you can run:
 ### `npm start`
 
 Runs the app in the development mode.\
-Open [http://ok-archive:1004](http://ok-archive:1004) to view it in your browser.
+Open [http://ok-archive.com:1004](http://ok-archive.com:1004) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.

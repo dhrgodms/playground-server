@@ -28,7 +28,7 @@ const GuestBook = () => {
     const toast = useToast();
 
     useEffect(() => {
-        (guestbook?.length < 2) && axios.get('http://ok-archive:2023/api/guestbook/all').then(response => setguestbook(response.data)).catch(error => console.log(error));
+        (guestbook?.length < 2) && axios.get('http://ok-archive.com:2023/api/guestbook/all').then(response => setguestbook(response.data)).catch(error => console.log(error));
         console.log(guestbook);
     }, [])
 
@@ -42,7 +42,7 @@ const GuestBook = () => {
         console.log(guestbookData);
         try {
             axios
-                .post('http://ok-archive:2023/api/guestbook/add', {
+                .post('http://ok-archive.com:2023/api/guestbook/add', {
                     memberName: guestbookData.commentNickname,
                     memberPassword: guestbookData.commentPassword,
                     content: guestbookData.commentContent,
@@ -77,7 +77,7 @@ const GuestBook = () => {
         console.log(guestbookData);
         try {
             axios
-                .post(`http://ok-archive:2023/api/guestbook/modify/${id}`, {
+                .post(`http://ok-archive.com:2023/api/guestbook/modify/${id}`, {
                     memberName: guestbookData.commentNickname,
                     memberPassword: guestbookData.commentPassword,
                     content: guestbookData.commentContent,

@@ -1,5 +1,5 @@
 {
-  "proxy": "http://ok-archive:2023",
+  "proxy": "http://ok-archive.com:2023",
   "name": "my-app",
   "version": "0.1.0",
   "private": true,

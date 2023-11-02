@@ -8,7 +8,7 @@ const ToonPostsList = () => {
     const [toonPosts, setToonPosts] = useState([{id:1,postListTile:'꾸잉',postNo:1}]);
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
-        (toonPosts?.length<2)&&axios.get('http://ok-archive:2023/api/post/tag/2').then(response => {
+        (toonPosts?.length<2)&&axios.get('http://ok-archive.com:2023/api/post/tag/2').then(response => {
             setToonPosts(response.data);
             setIsLoaded(true);
         }).catch(error=>console.log(error));

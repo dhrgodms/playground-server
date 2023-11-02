@@ -26,7 +26,7 @@ const SubSlider = () => {
     const btnRef = React.useRef();
 
     useEffect(() => {
-        axios.get(`http://ok-archive:2023/api/post/main-posts`).then(response => {
+        axios.get(`http://ok-archive.com:2023/api/post/main-posts`).then(response => {
             console.log(response.data);
             setMainPostsdata(response.data);
             setIsLoaded(true);

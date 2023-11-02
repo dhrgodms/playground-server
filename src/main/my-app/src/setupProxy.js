@@ -4,7 +4,7 @@ module.exports = function(app) {
     app.use(
         '/api',
         createProxyMiddleware({
-            target: 'http://ok-archive:2023',
+            target: 'http://ok-archive.com:2023',
             changeOrigin: true,
 })
 );

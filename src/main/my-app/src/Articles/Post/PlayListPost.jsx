@@ -8,7 +8,7 @@ const PlayListBook = () => {
     const [writePosts, setWritePosts] = useState([{id:1,postListTile:'꾸잉',postNo:1}]);
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
-        (writePosts?.length)&&axios.get('http://ok-archive:2023/api/post/tag/3').then(response => {
+        (writePosts?.length)&&axios.get('http://ok-archive.com:2023/api/post/tag/3').then(response => {
             setWritePosts(response.data);
             setIsLoaded(true);
         }).catch(error=>console.log(error));

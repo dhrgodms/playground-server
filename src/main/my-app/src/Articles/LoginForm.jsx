@@ -32,7 +32,7 @@ const LoginForm = () => {
         console.log(formData);
         try {
             axios
-                .post('http://ok-archive:2023/login', {
+                .post('http://ok-archive.com:2023/login', {
                     userEmail: formData.userEmail,
                 })
                 .then(res => {
