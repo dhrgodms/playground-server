@@ -8,7 +8,7 @@ const AllPostsList = () => {
     const [writePosts, setWritePosts] = useState([{id:1,postListTile:'꾸잉',postNo:1}]);
 
     useEffect(() => {
-        (writePosts?.length<2)&&axios.get('http://localhost:8080/api/post/all').then(response => setWritePosts(response.data)).catch(error=>console.log(error));
+        (writePosts?.length<2)&&axios.get('http://ok-archive:2023/api/post/all').then(response => setWritePosts(response.data)).catch(error=>console.log(error));
         console.log(writePosts);
     },[writePosts]);
     return (

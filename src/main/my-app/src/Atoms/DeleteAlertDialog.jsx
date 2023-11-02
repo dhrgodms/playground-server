@@ -20,7 +20,7 @@ function DeleteAlertDialog({isOpen, onOpen, onClose}) {
     function onDeletePost(){
 
 
-        axios.delete(`http://localhost:8080/api/post/delete/${id}`).then(response => {
+        axios.delete(`http://ok-archive:2023/api/post/delete/${id}`).then(response => {
             console.log(response);
             toast({
                 title: "게시글 삭제 완료",
