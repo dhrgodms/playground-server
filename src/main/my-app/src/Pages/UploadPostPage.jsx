@@ -5,6 +5,7 @@ import SubTemplate from "../Templates/SubTemplate";
 import {WriteForm} from "../Articles/UploadForm/WriteForm";
 import {ImageForm} from "../Articles/UploadForm/ImageForm";
 import MarkdownForm from "../Articles/UploadForm/MarkdownForm";
+import {FileForm} from "../Articles/UploadForm/FileForm";
 function UploadForm() {
 
         return (
@@ -14,6 +15,7 @@ function UploadForm() {
                         <Tab>글</Tab>
                         <Tab>그림</Tab>
                         <Tab>Markdown</Tab>
+                        <Tab>File</Tab>
                     </TabList>
                     <TabPanels>
                         <TabPanel>
@@ -24,6 +26,9 @@ function UploadForm() {
                         </TabPanel>
                         <TabPanel>
                             <MarkdownForm tag={3} />
+                        </TabPanel>
+                        <TabPanel>
+                            <FileForm tag={4} />
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

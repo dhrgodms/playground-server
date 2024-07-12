@@ -19,4 +19,8 @@ spring:
 server:
   port: 8080
 myapp:
-  hostname: http://43.201.141.241
+  hostname: http://localhost
+#  hostname: http://43.201.141.241
+
+file:
+  upload-dir: path/to/upload/directory

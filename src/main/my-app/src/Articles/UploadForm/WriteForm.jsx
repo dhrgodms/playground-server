@@ -96,7 +96,7 @@ export const WriteForm = ({tag, postValue}) => {
                     contentTitle: formData.content_title,
                     content: value,
                     thumbnail: formData.thumbnail,
-                    // tag : 1=글, 2=그림, 3=플레이리스트
+                    // tag : 1=글, 2=그림, 3=플레이리스트 4=file
                     tag:tag,
                     likes:0,
                     views:0,
