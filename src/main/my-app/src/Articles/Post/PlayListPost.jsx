@@ -3,12 +3,12 @@ import {Flex, SimpleGrid, Skeleton} from '@chakra-ui/react';
 import axios from "axios";
 import MainTemplate from "../../Templates/MainTemplate";
 import {PostCard} from "../../Components/PostCard";
-
+import serverUrl from "../../Constants/Constants";
 const PlayListBook = () => {
     const [writePosts, setWritePosts] = useState([{id:1,postListTile:'꾸잉',postNo:1}]);
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
-        (writePosts?.length)&&axios.get('http://ok-archive.com:2023/api/post/tag/3').then(response => {
+        (writePosts?.length)&&axios.get(`${serverUrl}:8080/api/post/tag/3`).then(response => {
             setWritePosts(response.data);
             setIsLoaded(true);
         }).catch(error=>console.log(error));

@@ -3,8 +3,7 @@ import {ArrowUpIcon} from "@chakra-ui/icons";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import MDEditor from "@uiw/react-md-editor";
-
+import serverUrl from "../../Constants/Constants";
 export const WriteForm = ({tag, postValue}) => {
     const toast = useToast();
     const navigate = useNavigate();
@@ -12,7 +11,7 @@ export const WriteForm = ({tag, postValue}) => {
         user_id:1,
         content_title: postValue?postValue.contentTitle:"",
         content: postValue?postValue.content:"",
-        thumbnail: postValue?postValue.thumbnail:"http://ok-archive.com:2023/thumbnail/white.JPG",
+        thumbnail: postValue?postValue.thumbnail:`${serverUrl}:8080/thumbnail/white.JPG`,
         // tag : 1=글, 2=그림, 3=플레이리스트
         tag:postValue?postValue.tag:"",
         likes:postValue?postValue.likes:"",
@@ -41,7 +40,7 @@ export const WriteForm = ({tag, postValue}) => {
             formImageData.append('file',e.target.files[0]);
             console.log(formImageData);
 
-            axios.post("http://ok-archive.com:2023/api/post/thumbnail-upload",formImageData,{
+            axios.post(`${serverUrl}:8080/api/post/thumbnail-upload`,formImageData,{
                 'Content-Type': 'multipart/form-data',
             },)
                 .then(response => {
@@ -92,7 +91,7 @@ export const WriteForm = ({tag, postValue}) => {
         console.log(formData);
         try {
             axios
-                .post('http://ok-archive.com:2023/api/post/add', {
+                .post(`${serverUrl}:8080/api/post/add`, {
                     userId:formData.user_id,
                     contentTitle: formData.content_title,
                     content: value,

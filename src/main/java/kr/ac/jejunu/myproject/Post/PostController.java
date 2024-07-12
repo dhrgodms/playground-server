@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import kr.ac.jejunu.myproject.Comment.Comment;
 import kr.ac.jejunu.myproject.Comment.CommentDao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/post")
-@CrossOrigin(origins = "http://ok-archive.com:1004")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class PostController {
     private final PostDao postDao;
@@ -46,6 +47,8 @@ public class PostController {
         return postDao.save(post);
     }
 
+    @Value("${myapp.hostname}")
+    private String hostname;
     @PostMapping("/thumbnail-upload")
     public String upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
         File path = new File(request.getServletContext().getRealPath("/") + "/static/");
@@ -55,7 +58,7 @@ public class PostController {
         bufferedOutputStream.write(file.getBytes());
         bufferedOutputStream.close();
 
-        return "http://ok-archive.com:2023/thumbnail/" + file.getOriginalFilename();
+        return hostname+":8080/thumbnail/" + file.getOriginalFilename();
     }
 
     @PostMapping("/update")
@@ -96,7 +99,7 @@ public class PostController {
     @GetMapping("/thumbnail-delete/{id}")
     public void deleteThumbnail(@PathVariable Long id){
         Post post = postDao.findById(id).get();
-        post.setThumbnail("http://ok-archive.com:2023/thumbnail/white.jpg");
+        post.setThumbnail(hostname+":8080/thumbnail/white.jpg");
         postDao.save(post);
     }
 

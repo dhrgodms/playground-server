@@ -17,6 +17,7 @@ import axios from "axios";
 import {ChatIcon, ViewIcon} from "@chakra-ui/icons";
 import {AiFillHeart} from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
+import serverUrl from "../Constants/Constants";
 export const PostLists = () => {
   const [mainPostsdata, setMainPostsdata] = useState([]);
   const navigate = useNavigate()
@@ -24,7 +25,7 @@ export const PostLists = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://ok-archive.com:2023/api/post/main-posts`).then(response => {
+    axios.get(`${serverUrl}:8080/api/post/main-posts`).then(response => {
       console.log(response.data);
       setMainPostsdata(response.data);
       setIsLoaded(true);
@@ -49,7 +50,7 @@ export const PostLists = () => {
           </CardHeader>
           <Image
               objectFit="cover"
-              src={"http://ok-archive.com:2023/thumbnail/5_thumb.jpg"}
+              src={`${serverUrl}:8080/thumbnail/5_thumb.jpg`}
               alt="Chakra UI"
           />
 

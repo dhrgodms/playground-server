@@ -10,7 +10,7 @@ import {DeleteIcon} from "@chakra-ui/icons";
 import React, {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-
+import serverUrl from "../Constants/Constants";
 function DeleteAlertDialog({isOpen, onOpen, onClose}) {
     const cancelRef = React.useRef()
     const toast = useToast();
@@ -20,7 +20,7 @@ function DeleteAlertDialog({isOpen, onOpen, onClose}) {
     function onDeletePost(){
 
 
-        axios.delete(`http://ok-archive.com:2023/api/post/delete/${id}`).then(response => {
+        axios.delete(`${serverUrl}:8080/api/post/delete/${id}`).then(response => {
             console.log(response);
             toast({
                 title: "게시글 삭제 완료",

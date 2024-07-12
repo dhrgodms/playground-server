@@ -3,7 +3,7 @@ import {ArrowUpIcon} from "@chakra-ui/icons";
 import React, {useCallback, useRef, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-
+import serverUrl from "../../Constants/Constants";
 export const ImageForm = ({tag}) => {
     const toast = useToast();
     const navigate = useNavigate();
@@ -26,7 +26,7 @@ export const ImageForm = ({tag}) => {
         console.log(formData);
         try {
             axios
-                .post('http://ok-archive.com:2023/api/post/add', {
+                .post(`${serverUrl}:8080/api/post/add`, {
                     userId:formData.user_id,
                     contentTitle: formData.content_title,
                     content: formData.content,
@@ -74,7 +74,7 @@ export const ImageForm = ({tag}) => {
             formImageData.append('file',e.target.files[0]);
             console.log(formImageData);
 
-            axios.post("http://ok-archive.com:2023/api/post/thumbnail-upload",formImageData,{
+            axios.post(`${serverUrl}:8080/api/post/thumbnail-upload`,formImageData,{
                 'Content-Type': 'multipart/form-data',
             },)
                 .then(response => {
@@ -144,7 +144,7 @@ export const ImageForm = ({tag}) => {
         }
 
         // 👇 Uploading the files using the fetch API to the server
-        axios.post('http://ok-archive.com:2023/api/image/add', data,{
+        axios.post(`${serverUrl}:8080/api/image/add`, data,{
             'Content-Type': 'multipart/form-data',
         },)
             .then((res) => {

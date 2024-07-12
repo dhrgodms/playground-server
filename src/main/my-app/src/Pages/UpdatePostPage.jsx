@@ -20,10 +20,9 @@ import {ArrowUpIcon, DeleteIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
 import SubTemplate from "../Templates/SubTemplate";
 import * as PropTypes from "prop-types";
-import {WriteForm} from "../Articles/UploadForm/WriteForm";
 import {ImageForm} from "../Articles/UploadForm/ImageForm";
 import MarkdownForm from "../Articles/UploadForm/MarkdownForm";
-
+import serverUrl from "../Constants/Constants";
 function Lorem(props) {
     return null;
 }
@@ -32,7 +31,7 @@ Lorem.propTypes = {count: PropTypes.number};
 
 function UpdatePostPage() {
     const id = window.location.pathname.split('/')[2];
-    const [writePost, setWritePost] = useState({id: 1, thumbnail: 'http://ok-archive.com:2023/white.jpg', contentTitle: ""});
+    const [writePost, setWritePost] = useState({id: 1, thumbnail: `${serverUrl}:8080/white.jpg`, contentTitle: ""});
     const toast = useToast();
     const {isOpen, onOpen, onClose} = useDisclosure()
     const cancelRef = React.useRef()
@@ -47,7 +46,7 @@ function UpdatePostPage() {
 
     useEffect(() => {
         const id = window.location.pathname.split('/')[2];
-        (writePost.id < 2) && axios.get(`http://ok-archive.com:2023/api/post/${id}`).then(response => {
+        (writePost.id < 2) && axios.get(`${serverUrl}:8080/api/post/${id}`).then(response => {
             setWritePost(response.data);
         }).catch(error => console.log(error));
 
@@ -59,7 +58,7 @@ function UpdatePostPage() {
         });
     }, [writePost]);
     const handleDelete = () => {
-        axios.delete(`http://ok-archive.com:2023/api/post/delete/${id}`).then(response => {
+        axios.delete(`${serverUrl}:8080/api/post/delete/${id}`).then(response => {
             console.log(response);
             toast({
                 title: "게시글 삭제 완료",
@@ -73,7 +72,7 @@ function UpdatePostPage() {
 
     function onDeletePost(){
 
-        axios.delete(`http://ok-archive.com:2023/api/post/delete/${id}`).then(response => {
+        axios.delete(`${serverUrl}:8080/api/post/delete/${id}`).then(response => {
             console.log(response);
             toast({
                 title: "게시글 삭제 완료",
@@ -102,7 +101,7 @@ function UpdatePostPage() {
             formImageData.append('file',e.target.files[0]);
             console.log(formImageData);
 
-            axios.post("http://ok-archive.com:2023/api/post/thumbnail-upload",formImageData,{
+            axios.post(`${serverUrl}:8080/api/post/thumbnail-upload`,formImageData,{
                 'Content-Type': 'multipart/form-data',
             },)
                 .then(response => {
@@ -128,12 +127,12 @@ function UpdatePostPage() {
             //     return;
             // }
 
-            axios.get(`http://ok-archive.com:2023/api/post/thumbnail-delete/${id}`,{
+            axios.get(`${serverUrl}:8080/api/post/thumbnail-delete/${id}`,{
                 'Content-Type': 'multipart/form-data',
             },)
                 .then(response => {
                     console.log(response);
-                    setFormData({...formData,thumbnail:"http://ok-archive.com:2023/thumbnail/white.jpg"});
+                    setFormData({...formData,thumbnail:`${serverUrl}:8080/thumbnail/white.jpg`});
                     console.log(formData.thumbnail);
                 })
                 .catch(error => {
@@ -173,7 +172,7 @@ function UpdatePostPage() {
         console.log(formData);
         try {
             axios
-                .post('http://ok-archive.com:2023/api/post/update', {
+                .post(`${serverUrl}:8080/api/post/update`, {
                     id:id,
                     userId:formData.user_id,
                     contentTitle: formData.content_title,

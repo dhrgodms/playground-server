@@ -4,7 +4,7 @@ import axios from "axios";
 import {Box, Button, Flex, FormControl, FormLabel, Input, Stack, useToast, VStack} from "@chakra-ui/react";
 import {ArrowUpIcon} from "@chakra-ui/icons";
 import {useNavigate} from "react-router-dom";
-
+import serverUrl from "../../Constants/Constants";
 export default function MarkdownForm({tag}) {
     const toast = useToast();
     const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function MarkdownForm({tag}) {
             formImageData.append('file',e.target.files[0]);
             console.log(formImageData);
 
-            axios.post("http://ok-archive.com:2023/api/post/thumbnail-upload",formImageData,{
+            axios.post(`${serverUrl}:8080/api/post/thumbnail-upload`,formImageData,{
                 'Content-Type': 'multipart/form-data',
             },)
                 .then(response => {
@@ -88,7 +88,7 @@ export default function MarkdownForm({tag}) {
         console.log(formData);
         try {
             axios
-                .post('http://ok-archive.com:2023/api/post/add', {
+                .post(`${serverUrl}:8080/api/post/add`, {
                     userId:formData.user_id,
                     contentTitle: formData.content_title,
                     content: value,

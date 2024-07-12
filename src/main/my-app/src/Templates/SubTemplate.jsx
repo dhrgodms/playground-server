@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import {PageTitle} from "../Atoms/PageTitle";
 import {DeleteIcon, HamburgerIcon} from "@chakra-ui/icons";
 import axios from "axios";
-
+import serverUrl from "../Constants/Constants";
 
 const SubSlider = () => {
     const [mainPostsdata, setMainPostsdata] = useState([]);
@@ -26,7 +26,7 @@ const SubSlider = () => {
     const btnRef = React.useRef();
 
     useEffect(() => {
-        axios.get(`http://ok-archive.com:2023/api/post/main-posts`).then(response => {
+        axios.get(`${serverUrl}:8080/api/post/main-posts`).then(response => {
             console.log(response.data);
             setMainPostsdata(response.data);
             setIsLoaded(true);

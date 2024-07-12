@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-
+import serverUrl from "../Constants/Constants";
 const LoginForm = () => {
 
     const toast = useToast();
@@ -32,7 +32,7 @@ const LoginForm = () => {
         console.log(formData);
         try {
             axios
-                .post('http://ok-archive.com:2023/login', {
+                .post(`${serverUrl}:8080/login`, {
                     userEmail: formData.userEmail,
                 })
                 .then(res => {

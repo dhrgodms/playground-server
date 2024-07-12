@@ -3,6 +3,7 @@ package kr.ac.jejunu.myproject.Image;
 import jakarta.servlet.http.HttpServletRequest;
 import kr.ac.jejunu.myproject.Post.PostDao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,15 +16,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/image")
-@CrossOrigin(origins = "http://ok-archive.com:1004")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class ImageController {
     private final ImageDao imageDao;
     private final PostDao postDao;
+    @Value("${myapp.hostname}")
+    private String hostname;
     @GetMapping("/{id}")
     public Image get(@PathVariable Long id){
         return imageDao.findById(id).get();
     }
+
 
     @PostMapping("/add")
     public List<String> upload(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) throws IOException {
@@ -37,7 +41,7 @@ public class ImageController {
             bufferedOutputStream.write(file.getBytes());
             bufferedOutputStream.close();
 
-            uploadedFilesUrls.add("http://ok-archive.com:2023/images/" + file.getOriginalFilename());
+            uploadedFilesUrls.add(hostname+":8080/images/" + file.getOriginalFilename());
         }
 
         for (String url : uploadedFilesUrls){

@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-
+import serverUrl from "../Constants/Constants";
 const SignUpForm = () => {
 
     const toast = useToast();
@@ -37,7 +37,7 @@ const SignUpForm = () => {
         console.log(formData);
         try {
             axios
-                .post('http://ok-archive.com:2023/join', {
+                .post(`${serverUrl}:8080/join`, {
                     userEmail: formData.userEmail,
                     userBirth: formData.userBirth,
                     userNickname: formData.userNickname,
