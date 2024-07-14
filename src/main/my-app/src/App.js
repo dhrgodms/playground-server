@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import { ChakraProvider } from '@chakra-ui/react';
 import MainPage from './Pages/MainPage';
-import WritePost from './Articles/Post/WritePost';
+import DefaultPost from './Articles/Post/DefaultPost';
 import PlayListPost from './Articles/Post/PlayListPost';
 import GuestBook from './Articles/Post/GuestBook';
 import WritePostsList from './Articles/Post/WritePostsList';
@@ -19,7 +19,7 @@ function App() {
       <ChakraProvider>
       <Routes>
       <Route path="/" element={<MainPage />} />
-        <Route path="/post/:id" element={<WritePost />} />
+        <Route path="/post/:id" element={<DefaultPost />} />
           <Route path="/upload" element={<UploadPostPage />} />
           <Route path="/update/:id" element={<UpdatePostPage />} />
 

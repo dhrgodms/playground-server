@@ -17,7 +17,6 @@ function DeleteAlertDialog({isOpen, onOpen, onClose}) {
     const navigate = useNavigate();
     const [id,setId] = useState(window.location.href.split('/')[2]);
 
-    function onDeletePost(){
 
 
         axios.delete(`${serverUrl}:8080/api/post/delete/${id}`).then(response => {

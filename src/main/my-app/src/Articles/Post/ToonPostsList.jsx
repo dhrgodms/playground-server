@@ -12,7 +12,6 @@ const ToonPostsList = () => {
             setToonPosts(response.data);
             setIsLoaded(true);
         }).catch(error=>console.log(error));
-        console.log(toonPosts);
     },[toonPosts]);
     return (
         <MainTemplate pageTitle={'끄적..만화 모음'} titleQuery={'만화'}>
