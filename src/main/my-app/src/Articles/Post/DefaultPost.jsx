@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Card,
   CardBody,
   Flex,
   HStack,
   IconButton,
-  useToast,
-  TagLeftIcon,
-  TagLabel,
-  Tag,
-  Button,
   Image,
   Skeleton,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import SubTemplate from "../../Templates/SubTemplate";
@@ -41,6 +41,9 @@ const DefaultPost = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [markdown, setMarkdown] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   async function handleLikes(e) {
@@ -99,7 +102,45 @@ const DefaultPost = () => {
           setImages(response.data);
         })
         .catch((error) => console.log(error));
-  });
+  }, [writePost]);
+
+  useEffect(() => {
+    console.log("writePost.tag:", writePost.tag);
+    // tag가 4이면
+    if (writePost.tag === 4) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            `${serverUrl}:8080/api/files/all/${id}`
+          );
+
+          setFiles(response.data);
+          console.log("files:", files);
+
+          for (let file of files) {
+            console.log("file.filePath : ", file.filePath);
+            await fetch(`${serverUrl}:8080${file.filePath}`)
+              .then((response) => response.text())
+              .then((text) => setMarkdown(text));
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsFetching(false);
+        }
+      };
+      if (!isFetching) {
+        setIsFetching(true);
+        fetchData();
+      }
+    }
+  }, [files, writePost]);
+
+  //   useEffect(() => {
+  //     fetch(`${serverUrl}:8080/${files.filePath}`)
+  //       .then((response) => response.text())
+  //       .then((text) => setMarkdown(text));
+  //   }, [files.filePath]);
 
   return (
     <Skeleton isLoaded={isLoaded} fadeDuration={1}>
@@ -118,15 +159,15 @@ const DefaultPost = () => {
         <HStack justify={"space-between"}>
           <Flex gap={3}>
             <Tag size={"md"} key={1} variant="subtle" colorScheme="gray">
-              <TagLeftIcon boxSize="12px" as={ViewIcon} />
+              <TagLeftIcon boxsiz="12px" as={ViewIcon} />
               <TagLabel>{writePost.views}</TagLabel>
             </Tag>
             <Tag size={"md"} key={2} variant="subtle" colorScheme="cyan">
-              <TagLeftIcon boxSize="12px" as={ChatIcon} />
+              <TagLeftIcon boxsiz="12px" as={ChatIcon} />
               <TagLabel>{commentAll.length}</TagLabel>
             </Tag>
             <Tag size={"md"} key={3} variant="subtle" colorScheme="pink">
-              <TagLeftIcon boxSiz e="12px" as={AiFillHeart} />
+              <TagLeftIcon boxsiz="12px" as={AiFillHeart} />
               <TagLabel>{writePost.likes}</TagLabel>
             </Tag>
           </Flex>
@@ -144,7 +185,7 @@ const DefaultPost = () => {
         <Card>
           <CardBody>
             <MDEditor.Markdown
-              source={writePost.content}
+              source={markdown}
               style={{
                 whiteSpace: "pre-wrap",
                 backgroundColor: "white",

@@ -7,7 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true 
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -23,4 +23,4 @@ myapp:
 #  hostname: http://43.201.141.241
 
 file:
-  upload-dir: path/to/upload/directory
+  upload-dir: /files/
