@@ -23,7 +23,7 @@ function App() {
                 <Route path="/post/:id" element={<DefaultPost/>}/>
                 <Route path="/upload" element={<UploadPostPage/>}/>
                 <Route path="/update/:id" element={<UpdatePostPage/>}/>
-
+                <Route path="/admin" element={<adminDefaultPost/>}/>
                 <Route path="/writes" element={<WritePostsList/>}/>
                 <Route path="/toons" element={<ImagesPostsLists/>}/>
                 <Route path="/lists" element={<MarkdownPostLists/>}/>

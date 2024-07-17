@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,43 +24,56 @@ public class PostController {
 
 
     @GetMapping("/{id}")
-    public Post get(@PathVariable Long id){
-        postDao.findById(id).get().setViews(postDao.findById(id).get().getViews()+1);
+    public Post get(@PathVariable Long id) {
+        postDao.findById(id).get().setViews(postDao.findById(id).get().getViews() + 1);
         postDao.save(postDao.findById(id).get());
         return postDao.findById(id).get();
     }
 
     @GetMapping("/all")
-    public List<Post> getAllPosts(){
+    public List<Post> getAllPosts() {
         return postDao.findAll();
     }
 
     @GetMapping("/tag/{id}")
-    public List<Post> getTagPosts(@PathVariable Integer id){
+    public List<Post> getTagPosts(@PathVariable Integer id) {
         return postDao.findAllByTag(id);
     }
 
     @PostMapping("/add")
-    public Post add(@RequestBody Post post){
+    public Post add(@RequestBody Post post) {
         return postDao.save(post);
     }
 
     @Value("${myapp.hostname}")
     private String hostname;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     @PostMapping("/thumbnail-upload")
     public String upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
-        File path = new File(request.getServletContext().getRealPath("/") + "/static/");
-//        path.mkdir();
-        FileOutputStream fileOutputStream = new FileOutputStream(path + file.getOriginalFilename());
-        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-        bufferedOutputStream.write(file.getBytes());
-        bufferedOutputStream.close();
+        try {
+            String absolutePath = System.getProperty("user.dir") + uploadDir + "thumbnail/";
+            // 디렉토리 확인 및 생성
+            File dir = new File(absolutePath);
+            if (!dir.exists()) {
+                dir.mkdirs(); // 디렉토리가 없으면 생성
+            }
 
-        return hostname+":8080/thumbnail/" + file.getOriginalFilename();
+            File dest = new File(absolutePath + file.getOriginalFilename());
+            file.transferTo(dest);
+
+            return uploadDir + "thumbnail/" + file.getOriginalFilename();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Failed to upload file";
+        }
     }
 
     @PostMapping("/update")
-    public Post update(@RequestBody Post post){
+    public Post update(@RequestBody Post post) {
         System.out.println(post.getId());
         Post updatedPost = postDao.findById(post.getId()).get();
         updatedPost.setContentTitle(post.getContentTitle());
@@ -92,20 +103,20 @@ public class PostController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         postDao.deleteById(id);
     }
 
     @GetMapping("/thumbnail-delete/{id}")
-    public void deleteThumbnail(@PathVariable Long id){
+    public void deleteThumbnail(@PathVariable Long id) {
         Post post = postDao.findById(id).get();
-        post.setThumbnail(hostname+":8080/thumbnail/white.jpg");
+        post.setThumbnail(hostname + ":8080/thumbnail/white.jpg");
         postDao.save(post);
     }
 
     @GetMapping("/like/{id}")
-    public Long getLikes(@PathVariable Long id){
-        postDao.findById(id).get().setLikes(postDao.findById(id).get().getLikes()+1);
+    public Long getLikes(@PathVariable Long id) {
+        postDao.findById(id).get().setLikes(postDao.findById(id).get().getLikes() + 1);
         postDao.save(postDao.findById(id).get());
         return postDao.findById(id).get().getLikes();
     }
