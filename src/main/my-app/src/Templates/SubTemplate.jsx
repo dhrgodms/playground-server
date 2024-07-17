@@ -1,18 +1,19 @@
-import React, {Children, useEffect, useState} from 'react';
+import React, {Children, useEffect, useState} from "react";
 import {
-    Flex,
-    Stack,
-    Code,
-    useDisclosure,
     Button,
     Drawer,
-    DrawerOverlay,
+    DrawerBody,
+    DrawerCloseButton,
     DrawerContent,
-    DrawerCloseButton, DrawerHeader, DrawerBody, Input, DrawerFooter, IconButton
-} from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+    DrawerHeader,
+    DrawerOverlay,
+    Flex,
+    IconButton,
+    useDisclosure,
+} from "@chakra-ui/react";
+import {useNavigate} from "react-router-dom";
 import {PageTitle} from "../Atoms/PageTitle";
-import {DeleteIcon, HamburgerIcon} from "@chakra-ui/icons";
+import {HamburgerIcon} from "@chakra-ui/icons";
 import axios from "axios";
 import serverUrl from "../Constants/Constants";
 
@@ -22,48 +23,55 @@ const SubSlider = () => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const navigate = useNavigate();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const {isOpen, onOpen, onClose} = useDisclosure();
     const btnRef = React.useRef();
 
     useEffect(() => {
-        axios.get(`${serverUrl}:8080/api/post/main-posts`).then(response => {
-            console.log(response.data);
-            setMainPostsdata(response.data);
-            setIsLoaded(true);
-        }).catch(error=>console.log(error));
-    },[]); // slider에도 반영해주어야함
+        axios
+            .get(`${serverUrl}:8080/api/post/main-posts`)
+            .then((response) => {
+                setMainPostsdata(response.data);
+                setIsLoaded(true);
+            })
+            .catch((error) => console.log(error));
+    }, []); // slider에도 반영해주어야함
 
     return (
-        <><Flex m={'5'} width={"full"} justify={"space-between"}>
-                <IconButton ref={btnRef} icon={<HamburgerIcon/>} colorScheme="green" onClick={onOpen}  aria-label={'hambuger'}/>
-        </Flex>
+        <>
+            <Flex m={"5"} width={"full"} justify={"space-between"}>
+                <IconButton
+                    ref={btnRef}
+                    icon={<HamburgerIcon/>}
+                    colorScheme="green"
+                    onClick={onOpen}
+                    aria-label={"hambuger"}
+                />
+            </Flex>
             <Drawer
                 isOpen={isOpen}
                 placement="left"
                 onClose={onClose}
                 finalFocusRef={btnRef}
             >
-                <DrawerOverlay />
+                <DrawerOverlay/>
                 <DrawerContent>
-                    <DrawerCloseButton />
+                    <DrawerCloseButton/>
                     <DrawerHeader>Welcome to Haeeun.zip</DrawerHeader>
 
-
                     <DrawerBody>
-                        <Flex direction={'column'} gap={'1.5em'}>
-                            <Input placeholder="Type here..." />
+                        <Flex direction={"column"} gap={"1.5em"}>
                             <Button
                                 ref={btnRef}
                                 colorScheme="teal"
-                                variant={'ghost'}
-                                onClick={() => navigate('/')}
+                                variant={"ghost"}
+                                onClick={() => navigate("/")}
                             >
                                 메인으로
                             </Button>
                             <Button
                                 ref={btnRef}
                                 colorScheme="red"
-                                variant={'ghost'}
+                                variant={"ghost"}
                                 onClick={() => navigate(`/post/${mainPostsdata[0]?.id}`)}
                             >
                                 인기글
@@ -71,7 +79,7 @@ const SubSlider = () => {
                             <Button
                                 ref={btnRef}
                                 colorScheme="teal"
-                                variant={'ghost'}
+                                variant={"ghost"}
                                 onClick={() => navigate(`/post/${mainPostsdata[1]?.id}`)}
                             >
                                 최신글
@@ -79,7 +87,7 @@ const SubSlider = () => {
                             <Button
                                 ref={btnRef}
                                 colorScheme="green"
-                                variant={'ghost'}
+                                variant={"ghost"}
                                 onClick={() => navigate(`/writes`)}
                             >
                                 생각글
@@ -87,7 +95,7 @@ const SubSlider = () => {
                             <Button
                                 ref={btnRef}
                                 colorScheme="green"
-                                variant={'ghost'}
+                                variant={"ghost"}
                                 onClick={() => navigate(`/toons`)}
                             >
                                 일상만화
@@ -95,16 +103,16 @@ const SubSlider = () => {
                             <Button
                                 ref={btnRef}
                                 colorScheme="green"
-                                variant={'ghost'}
+                                variant={"ghost"}
                                 onClick={() => navigate(`/lists`)}
                             >
-                                내가 듣는 플레이리스트(Playlist)
+                                md files
                             </Button>
                             <Button
                                 ref={btnRef}
                                 colorScheme="pink"
-                                variant={'ghost'}
-                                onClick={() => navigate('/guestbook')}
+                                variant={"ghost"}
+                                onClick={() => navigate("/guestbook")}
                             >
                                 어서오세요 방명록
                             </Button>
@@ -115,26 +123,23 @@ const SubSlider = () => {
         </>
     );
 };
-const SubTemplate = ({children,pageTitle,titleQuery}) => {
-
-
+const SubTemplate = ({children, pageTitle, titleQuery}) => {
     return (
         <>
-            <Flex direction={"column"} align={'center'}>
-                <Flex width={'95vw'}>
+            <Flex direction={"column"} align={"center"}>
+                <Flex width={"95vw"}>
                     <SubSlider/>
                 </Flex>
                 <Flex
-                    direction={'column'}
-                    gap={'30px'}
+                    direction={"column"}
+                    gap={"30px"}
                     m={5}
-                    width={'70vw'}
-                    justify={'center'}
+                    width={"70vw"}
+                    justify={"center"}
                 >
                     <PageTitle title={pageTitle} query={titleQuery}/>
                     {Children.toArray(children)}
                 </Flex>
-
             </Flex>
         </>
     );

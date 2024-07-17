@@ -1,18 +1,15 @@
 package kr.ac.jejunu.myproject.Image;
 
-import jakarta.servlet.http.HttpServletRequest;
-import kr.ac.jejunu.myproject.Post.PostDao;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/image")
@@ -20,42 +17,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageController {
     private final ImageDao imageDao;
-    private final PostDao postDao;
-    @Value("${myapp.hostname}")
-    private String hostname;
+
+    @Autowired
+    private ImageStorageService imageStorageService;
+
+
     @GetMapping("/{id}")
-    public Image get(@PathVariable Long id){
+    public Image get(@PathVariable Long id) {
         return imageDao.findById(id).get();
     }
 
 
     @PostMapping("/add")
-    public List<String> upload(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) throws IOException {
-        List<String> uploadedFilesUrls = new ArrayList<>();
-        System.out.println("files : "+files);
-        File path = new File(request.getServletContext().getRealPath("/") + "/static/");
+    public ResponseEntity<String> upload(@RequestParam("file") List<MultipartFile> files) {
+        List<String> filePaths = files.stream()
+                .map(file -> {
+                    try {
+                        return imageStorageService.storeImage(file);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to store file " + file.getOriginalFilename(), e);
+                    }
+                }).collect(Collectors.toList());
+        return new ResponseEntity<>("File uploaded successfully: " + String.join(",", filePaths), HttpStatus.OK);
 
-        for (MultipartFile file : files) {
-            FileOutputStream fileOutputStream = new FileOutputStream(path + file.getOriginalFilename());
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-            bufferedOutputStream.write(file.getBytes());
-            bufferedOutputStream.close();
-
-            uploadedFilesUrls.add(hostname+":8080/images/" + file.getOriginalFilename());
-        }
-
-        for (String url : uploadedFilesUrls){
-            Long postId = postDao.findTop1ByOrderByIdDesc().getId();
-            Image image = new Image();
-            image.setUrl(url);
-            image.setPostId(postId+1);
-            imageDao.save(image);
-        };
-        return uploadedFilesUrls;
     }
 
     @GetMapping("/all/{id}")
-    public List<Image> getAll(@PathVariable Long id){
+    public List<Image> getAll(@PathVariable Long id) {
         return imageDao.findByPostId(id);
     }
 
