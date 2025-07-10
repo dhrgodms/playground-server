@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { ArrowUpIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
-import serverUrl from "../../Constants/Constants";
+import { serverUrl, serverUrlV2 } from "../../Constants/Constants";
 export default function MarkdownForm({ tag }) {
   const toast = useToast();
   const navigate = useNavigate();
@@ -22,9 +22,7 @@ export default function MarkdownForm({ tag }) {
     content: "내용!",
     thumbnail: "",
     // tag : 1=글, 2=그림, 3=플레이리스트
-    tag: 1,
-    likes: 0,
-    views: 0,
+    tag: 1
   });
   const [value, setValue] = React.useState("**Hello world!!!**");
 
@@ -97,16 +95,13 @@ export default function MarkdownForm({ tag }) {
     e.preventDefault();
     try {
       axios
-        .post(`${serverUrl}:8080/api/post/add`, {
+        .post(`${serverUrlV2}api/post`, {
           userId: formData.user_id,
           contentTitle: formData.content_title,
           content: value,
           thumbnail: formData.thumbnail,
           // tag : 1=글, 2=그림, 3=플레이리스트
-          tag: tag,
-          likes: 0,
-          views: 0,
-          commentCount: 0,
+          tag: tag
         })
         .then((res) => {
           setFormData({

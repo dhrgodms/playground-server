@@ -1,4 +1,4 @@
-import React, {Children, useEffect, useState} from "react";
+import React, { Children, useEffect, useState } from "react";
 import {
     Button,
     Drawer,
@@ -11,11 +11,11 @@ import {
     IconButton,
     useDisclosure,
 } from "@chakra-ui/react";
-import {useNavigate} from "react-router-dom";
-import {PageTitle} from "../Atoms/PageTitle";
-import {HamburgerIcon} from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
+import { PageTitle } from "../Atoms/PageTitle";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import axios from "axios";
-import serverUrl from "../Constants/Constants";
+import serverUrl, { serverUrlV2 } from "../Constants/Constants";
 
 const SubSlider = () => {
     const [mainPostsdata, setMainPostsdata] = useState([]);
@@ -23,25 +23,16 @@ const SubSlider = () => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const navigate = useNavigate();
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
 
-    useEffect(() => {
-        axios
-            .get(`${serverUrl}:8080/api/post/main-posts`)
-            .then((response) => {
-                setMainPostsdata(response.data);
-                setIsLoaded(true);
-            })
-            .catch((error) => console.log(error));
-    }, []); // slider에도 반영해주어야함
 
     return (
         <>
             <Flex m={"5"} width={"full"} justify={"space-between"}>
                 <IconButton
                     ref={btnRef}
-                    icon={<HamburgerIcon/>}
+                    icon={<HamburgerIcon />}
                     colorScheme="green"
                     onClick={onOpen}
                     aria-label={"hambuger"}
@@ -53,9 +44,9 @@ const SubSlider = () => {
                 onClose={onClose}
                 finalFocusRef={btnRef}
             >
-                <DrawerOverlay/>
+                <DrawerOverlay />
                 <DrawerContent>
-                    <DrawerCloseButton/>
+                    <DrawerCloseButton />
                     <DrawerHeader>Welcome to Haeeun.zip</DrawerHeader>
 
                     <DrawerBody>
@@ -123,12 +114,14 @@ const SubSlider = () => {
         </>
     );
 };
-const SubTemplate = ({children, pageTitle, titleQuery}) => {
+const SubTemplate = ({ children, pageTitle, titleQuery }) => {
+    console.log(pageTitle)
+    console.log(titleQuery)
     return (
         <>
             <Flex direction={"column"} align={"center"}>
                 <Flex width={"95vw"}>
-                    <SubSlider/>
+                    <SubSlider />
                 </Flex>
                 <Flex
                     direction={"column"}
@@ -137,7 +130,7 @@ const SubTemplate = ({children, pageTitle, titleQuery}) => {
                     width={"70vw"}
                     justify={"center"}
                 >
-                    <PageTitle title={pageTitle} query={titleQuery}/>
+                    <PageTitle title={pageTitle} query={titleQuery} />
                     {Children.toArray(children)}
                 </Flex>
             </Flex>

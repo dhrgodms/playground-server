@@ -30,9 +30,9 @@ public class Post {
     private Long version;
     String thumbnail;
     private int tag; // 1=글, 2=그림, 3=플레이리스트
-    private Long views; // 조회수
-    private Long likes; // 좋아요 수
-    private Long commentCount;
+    private Long views = 0L; // 조회수
+    private Long likes = 0L; // 좋아요 수
+    private Long commentCount = 0L;
 
     public Post(String content, String contentTitle) {
         this.content = content;

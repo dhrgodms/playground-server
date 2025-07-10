@@ -14,7 +14,7 @@ import { MainCard } from "./MainCard";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import serverUrl from "../Constants/Constants";
+import serverUrl, { serverUrlV2 } from "../Constants/Constants";
 export const PostLists = () => {
   const [mainPostsdata, setMainPostsdata] = useState([]);
   const navigate = useNavigate();
@@ -23,13 +23,13 @@ export const PostLists = () => {
 
   useEffect(() => {
     axios
-      .get(`${serverUrl}:8080/api/post/main-posts`)
+      .get(`${serverUrlV2}/posts`)
       .then((response) => {
-        setMainPostsdata(response.data);
+        setMainPostsdata(response.data.content);
         setIsLoaded(true);
       })
       .catch((error) => console.log(error));
-  }, []); // slider에도 반영해주어야함
+  }, []);
 
   const handleCardClick = () => {
     navigate("/guestbook");

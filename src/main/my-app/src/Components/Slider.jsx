@@ -12,29 +12,29 @@ import {
     IconButton,
     useDisclosure,
 } from "@chakra-ui/react";
-import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {HamburgerIcon} from "@chakra-ui/icons";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import serverUrl from "../Constants/Constants";
 
 export const Slider = () => {
     const navigate = useNavigate();
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
 
     const [mainPostsdata, setMainPostsdata] = useState([]);
 
     const [isLoaded, setIsLoaded] = useState(false);
-    useEffect(() => {
-        axios
-            .get(`${serverUrl}:8080/api/post/main-posts`)
-            .then((response) => {
-                setMainPostsdata(response.data);
-                setIsLoaded(true);
-            })
-            .catch((error) => console.log(error));
-    }, []); // slider에도 반영해주어야함
+    // useEffect(() => {
+    //     axios
+    //         .get(`${serverUrl}:8080/api/post/main-posts`)
+    //         .then((response) => {
+    //             setMainPostsdata(response.data);
+    //             setIsLoaded(true);
+    //         })
+    //         .catch((error) => console.log(error));
+    // }, []); // slider에도 반영해주어야함
 
     return (
         <>
@@ -42,18 +42,11 @@ export const Slider = () => {
                 <Flex gap={"4"}>
                     <IconButton
                         ref={btnRef}
-                        icon={<HamburgerIcon/>}
+                        icon={<HamburgerIcon />}
                         colorScheme="green"
                         onClick={onOpen}
                         aria-label={"hambuger"}
                     />
-                    {/*<Button*/}
-                    {/*    ref={btnRef}*/}
-                    {/*    colorScheme="pink"*/}
-                    {/*    onClick={() => navigate('/login')}*/}
-                    {/*>*/}
-                    {/*    LOG IN*/}
-                    {/*</Button>*/}
                 </Flex>
                 <Button
                     ref={btnRef}
@@ -69,15 +62,11 @@ export const Slider = () => {
                 onClose={onClose}
                 finalFocusRef={btnRef}
             >
-                <DrawerOverlay/>
+                <DrawerOverlay />
                 <DrawerContent>
-                    <DrawerCloseButton/>
+                    <DrawerCloseButton />
                     <DrawerHeader>
-                        <Heading size={"lg"} mb={3}>
-                            안녕! 🤙
-                        </Heading>
-                        <Heading size={"lg"} mb={3}>
-                            여긴 🆗 Haeeun.zip
+                        <Heading size={"lg"} mb={3}>🆗 Haeeun.zip
                         </Heading>
                     </DrawerHeader>
 

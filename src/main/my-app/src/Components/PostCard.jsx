@@ -11,17 +11,21 @@ import {
 } from '@chakra-ui/react';
 
 import { ChatIcon, ExternalLinkIcon } from '@chakra-ui/icons';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React from "react";
+import axios from 'axios';
+import { serverUrlV2 } from '../Constants/Constants';
+
+
 
 export const PostCard = ({ post }) => {
     const navigate = useNavigate();
     const btnRef = React.useRef();
-    const  handleCardClick = () => {
+    const handleCardClick = () => {
         navigate(`/post/${post.id}`);
     };
     return (
-        <Card maxW="md" style={{cursor:'pointer'}} onClick={handleCardClick} ref={btnRef}>
+        <Card maxW="md" style={{ cursor: 'pointer' }} onClick={handleCardClick} ref={btnRef}>
             <CardHeader>
                 <Flex spacing="4">
                     <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">

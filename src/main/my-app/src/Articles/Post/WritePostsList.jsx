@@ -1,36 +1,35 @@
-import React, {useEffect, useState} from "react";
-import {Flex, SimpleGrid, Skeleton} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Flex, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import axios from "axios";
-import {PostCard} from "../../Components/PostCard";
+import { PostCard } from "../../Components/PostCard";
 import MainTemplate from "../../Templates/MainTemplate";
-import serverUrl from "../../Constants/Constants";
+import serverUrl, { serverUrlV2 } from "../../Constants/Constants";
 
 const WritePostsList = () => {
     const [writePosts, setWritePosts] = useState([
-        {id: 1, postListTile: "꾸잉", postNo: 1},
+        { id: 1, postListTile: "꾸잉", postNo: 1 },
     ]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        writePosts?.length < 2 &&
         axios
-            .get(`${serverUrl}:8080/api/post/tag/1`)
+            .get(`${serverUrlV2}/posts?tag=1`)
             .then((response) => {
-                setWritePosts(response.data);
+                setWritePosts(response.data.content);
                 setIsLoaded(true);
             })
             .catch((error) => console.log(error));
-    }, [writePosts]);
+    }, []); // 빈 배열로 수정!
     return (
         <MainTemplate pageTitle={"글 모음"} titleQuery={"글"}>
-            <Flex height={"100vh"} style={{flexDirection: "column"}}>
+            <Flex height={"100vh"} style={{ flexDirection: "column" }}>
                 <Skeleton isLoaded={isLoaded} fadeDuration={1}>
                     <SimpleGrid
                         spacing={4}
                         templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
                     >
                         {writePosts.map((item) =>
-                            item.id > 1 ? <PostCard key={item.id} post={item}/> : null
+                            <PostCard key={item.id} post={item} />
                         )}
                     </SimpleGrid>
                 </Skeleton>

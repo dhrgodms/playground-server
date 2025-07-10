@@ -12,7 +12,7 @@ import { ArrowUpIcon } from "@chakra-ui/icons";
 import React, { useCallback, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import serverUrl from "../../Constants/Constants";
+import { serverUrl, serverUrlV2 } from "../../Constants/Constants";
 export const ImageForm = ({ tag }) => {
   const toast = useToast();
   const navigate = useNavigate();
@@ -22,9 +22,7 @@ export const ImageForm = ({ tag }) => {
     content: "내용!",
     thumbnail: "",
     // tag : 1=글, 2=그림, 3=플레이리스트
-    tag: tag,
-    likes: 0,
-    views: 0,
+    tag: tag
   });
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -34,7 +32,7 @@ export const ImageForm = ({ tag }) => {
     e.preventDefault();
     try {
       axios
-        .post(`${serverUrl}:8080/api/post/add`, {
+        .post(`${serverUrlV2}/posts`, {
           userId: formData.user_id,
           contentTitle: formData.content_title,
           content: formData.content,

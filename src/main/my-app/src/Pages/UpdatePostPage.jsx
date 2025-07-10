@@ -24,12 +24,12 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { ArrowUpIcon, DeleteIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SubTemplate from "../Templates/SubTemplate";
 import * as PropTypes from "prop-types";
 import { ImageForm } from "../Articles/UploadForm/ImageForm";
 import MarkdownForm from "../Articles/UploadForm/MarkdownForm";
-import serverUrl from "../Constants/Constants";
+import { serverUrl, serverUrlV2 } from "../Constants/Constants";
 function Lorem(props) {
   return null;
 }
@@ -37,55 +37,48 @@ function Lorem(props) {
 Lorem.propTypes = { count: PropTypes.number };
 
 function UpdatePostPage() {
-  const id = window.location.pathname.split("/")[2];
+  const { id } = useParams();
   const [writePost, setWritePost] = useState({
     id: 1,
-    thumbnail: `${serverUrl}:8080/white.jpg`,
+    thumbnail: `${serverUrl}/white.jpg`,
     contentTitle: "",
   });
   const toast = useToast();
 
   const [formData, setFormData] = useState({
     user_id: 1,
-    content_title: writePost.contentTitle,
+    contentTitle: writePost.contentTitle,
     content: writePost.content,
     thumbnail: writePost.thumbnail,
   });
   const navigate = useNavigate();
 
+  // 1. id가 바뀔 때만 게시글 fetch
   useEffect(() => {
-    const id = window.location.pathname.split("/")[2];
-    writePost.id < 2 &&
+    if (id) {
       axios
-        .get(`${serverUrl}:8080/api/post/${id}`)
+        .get(`${serverUrlV2}/posts/${id}`)
         .then((response) => {
           setWritePost(response.data);
         })
         .catch((error) => console.log(error));
+    }
+  }, [id]);
 
+  // 2. writePost가 바뀔 때만 formData 세팅
+  useEffect(() => {
     setFormData({
       user_id: 1,
-      content_title: writePost.contentTitle,
+      contentTitle: writePost.contentTitle,
       content: writePost.content,
       thumbnail: writePost.thumbnail,
     });
   }, [writePost]);
-  // const handleDelete = () => {
-  //     axios.delete(`${serverUrl}:8080/api/post/delete/${id}`).then(response => {
-  //         console.log(response);
-  //         toast({
-  //             title: "게시글 삭제 완료",
-  //             status: "success",
-  //             duration: 9000,
-  //             isClosable: true,
-  //         });
-  //         navigate(-1);
-  //     }).catch(error => console.log(error));
-  // }
+
 
   function onDeletePost() {
     axios
-      .delete(`${serverUrl}:8080/api/post/delete/${id}`)
+      .delete(`${serverUrlV2}/posts/${id}`)
       .then((response) => {
         toast({
           title: "게시글 삭제 완료",
@@ -195,21 +188,17 @@ function UpdatePostPage() {
     e.preventDefault();
     try {
       axios
-        .post(`${serverUrl}:8080/api/post/update`, {
+        .put(`${serverUrlV2}/posts/${id}`, {
           id: id,
-          userId: formData.user_id,
-          contentTitle: formData.content_title,
+          contentTitle: formData.contentTitle,
           content: formData.content,
           thumbnail: formData.thumbnail,
           tag: writePost.tag,
-          likes: 0,
-          views: 0,
-          commentCount: 0,
         })
         .then((res) => {
           setFormData({
             user_id: "",
-            content_title: "",
+            contentTitle: "",
             content: "",
             thumbnail: "",
           });
@@ -278,6 +267,7 @@ function UpdatePostPage() {
       pageTitle={writePost.contentTitle + "   (EDITING)"}
       titleQuery={writePost.contentTitle}
     >
+      {console.log(formData)}
       <Tabs variant="soft-rounded" colorScheme="yellow">
         <TabList>
           <Tab>글</Tab>
@@ -297,9 +287,9 @@ function UpdatePostPage() {
                     <Textarea
                       focusBorderColor="green"
                       type="text"
-                      defaultValue={formData && formData.content_title}
+                      defaultValue={formData && formData.contentTitle}
                       onChange={handleInputChange}
-                      name="content_title"
+                      name="contentTitle"
                     />
                   </FormControl>
                   <FormControl isRequired>

@@ -17,17 +17,17 @@ import axios from "axios";
 import SubTemplate from "../../Templates/SubTemplate";
 import ScrollToTop from "../../Atoms/ScrollToTop";
 import { ChatIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AiFillHeart } from "react-icons/ai";
 import MDEditor from "@uiw/react-md-editor";
-import serverUrl from "../../Constants/Constants";
+import { serverUrl, serverUrlV2 } from "../../Constants/Constants";
 import CommentContainer from "../../Components/Comments";
 
 const DefaultPost = () => {
-  const id = window.location.pathname.split("/")[2];
+  const { id } = useParams();
   const [writePost, setWritePost] = useState({
     id: 1,
-    thumbnail: `${serverUrl}:8080/white.jpg`,
+    thumbnail: `${serverUrl}/white.jpg`,
     contentTitle: "",
   });
   const [commentAll, setCommentAll] = useState([
@@ -49,7 +49,7 @@ const DefaultPost = () => {
   async function handleLikes(e) {
     e.preventDefault();
     try {
-      axios.get(`${serverUrl}:8080/api/post/like/${id}`).then((res) => {
+      axios.post(`${serverUrlV2}/posts/${id}/like`).then((res) => {
         if (res?.data) {
           setWritePost({ ...writePost, likes: res.data });
         } else {
@@ -70,58 +70,51 @@ const DefaultPost = () => {
     }
   }
 
+  // 게시글 정보, 댓글 가져오기
   useEffect(() => {
-    // postId 추출
-    const id = window.location.pathname.split("/")[2];
+    axios
+      .get(`${serverUrlV2}/posts/${id}`)
+      .then((response) => {
+        setWritePost(response.data);
+        setIsLoaded(true);
+      })
+      .catch((error) => console.log(error));
 
-    // id<2 (기본 Post)
-    writePost.id < 2 &&
-      axios
-        .get(`${serverUrl}:8080/api/post/${id}`)
-        .then((response) => {
-          setWritePost(response.data);
-          // 스켈레톤 생성을 위한 load state update
-          setIsLoaded(true);
-        })
-        .catch((error) => console.log(error));
-
-    // postId에 따른 댓글 가져오기
     axios
       .get(`${serverUrl}:8080/api/comment/all/${id}`)
       .then((response) => {
         setCommentAll(response.data);
       })
       .catch((error) => console.log(error));
+  }, [id]);
 
-    // tag가 2이면
-    writePost.tag === 2 &&
-      images.length < 1 &&
+  // tag가 2(만화글)일 때 이미지 가져오기
+  useEffect(() => {
+    if (writePost.tag === 2) {
       axios
         .get(`${serverUrl}:8080/api/image/all/${id}`)
         .then((response) => {
           setImages(response.data);
         })
         .catch((error) => console.log(error));
-  }, [writePost]);
+    }
+  }, [id, writePost.tag]);
 
+  // tag가 4(마크다운글)일 때 파일 및 마크다운 내용 가져오기
   useEffect(() => {
-    console.log("writePost.tag:", writePost.tag);
-    // tag가 4이면
     if (writePost.tag === 4) {
       const fetchData = async () => {
         try {
           const response = await axios.get(
             `${serverUrl}:8080/api/files/all/${id}`
           );
-
           setFiles(response.data);
-          console.log("files:", files);
 
-          for (let file of files) {
-            console.log("file.filePath : ", file.filePath);
-            await fetch(`${serverUrl}:8080${file.filePath}`)
-              .then((response) => response.text())
-              .then((text) => setMarkdown(text));
+          // 여러 파일이 있을 경우, 첫 번째 파일만 마크다운으로 표시 (필요시 로직 수정)
+          if (response.data.length > 0) {
+            const file = response.data[0];
+            const text = await fetch(`${serverUrl}${file.filePath}`).then((res) => res.text());
+            setMarkdown(text);
           }
         } catch (error) {
           console.error(error);
@@ -134,13 +127,7 @@ const DefaultPost = () => {
         fetchData();
       }
     }
-  }, [files, writePost]);
-
-  //   useEffect(() => {
-  //     fetch(`${serverUrl}:8080/${files.filePath}`)
-  //       .then((response) => response.text())
-  //       .then((text) => setMarkdown(text));
-  //   }, [files.filePath]);
+  }, [id, writePost.tag]);
 
   return (
     <Skeleton isLoaded={isLoaded} fadeDuration={1}>
@@ -152,7 +139,7 @@ const DefaultPost = () => {
           <IconButton
             icon={<EditIcon />}
             aria-label="editPost"
-            onClick={() => navigate(`/update/${id}`)}
+            onClick={() => navigate(`/post/update/${id}`)}
           />
         </Flex>
         <ScrollToTop />
@@ -184,14 +171,26 @@ const DefaultPost = () => {
         </HStack>
         <Card>
           <CardBody>
-            <MDEditor.Markdown
-              source={markdown}
-              style={{
-                whiteSpace: "pre-wrap",
-                backgroundColor: "white",
-                color: "black",
-              }}
-            />
+            {writePost.tag === 4 ? (
+              <MDEditor.Markdown
+                source={markdown}
+                style={{
+                  whiteSpace: "pre-wrap",
+                  backgroundColor: "white",
+                  color: "black",
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  whiteSpace: "pre-wrap",
+                  backgroundColor: "white",
+                  color: "black",
+                }}
+              >
+                {writePost.content}
+              </div>
+            )}
             {images.map((image, index) => (
               <Image key={index} src={image.url} alt={image.id} />
             ))}

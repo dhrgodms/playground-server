@@ -12,7 +12,7 @@ import { ArrowUpIcon } from "@chakra-ui/icons";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import serverUrl from "../../Constants/Constants";
+import { serverUrl, serverUrlV2 } from "../../Constants/Constants";
 export const WriteForm = ({ tag, postValue }) => {
   const toast = useToast();
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ export const WriteForm = ({ tag, postValue }) => {
       formImageData.append("file", e.target.files[0]);
 
       axios
-        .post(`${serverUrl}:8080/api/post/thumbnail-upload`, formImageData, {
+        .post(`${serverUrl}/api/post/thumbnail-upload`, formImageData, {
           "Content-Type": "multipart/form-data",
         })
         .then((response) => {
@@ -104,16 +104,13 @@ export const WriteForm = ({ tag, postValue }) => {
     e.preventDefault();
     try {
       axios
-        .post(`${serverUrl}:8080/api/post/add`, {
+        .post(`${serverUrlV2}/posts`, {
           userId: formData.user_id,
           contentTitle: formData.content_title,
-          content: value,
+          content: formData.content,
           thumbnail: formData.thumbnail,
           // tag : 1=글, 2=그림, 3=플레이리스트 4=file
-          tag: tag,
-          likes: 0,
-          views: 0,
-          commentCount: 0,
+          tag: tag
         })
         .then((res) => {
           setFormData({

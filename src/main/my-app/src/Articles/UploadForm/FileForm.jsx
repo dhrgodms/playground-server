@@ -12,7 +12,7 @@ import { ArrowUpIcon } from "@chakra-ui/icons";
 import React, { useCallback, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import serverUrl from "../../Constants/Constants";
+import { serverUrl, serverUrlV2 } from "../../Constants/Constants";
 export const FileForm = ({ tag }) => {
   const toast = useToast();
   const navigate = useNavigate();
@@ -34,15 +34,13 @@ export const FileForm = ({ tag }) => {
     e.preventDefault();
     try {
       axios
-        .post(`${serverUrl}:8080/api/post/add`, {
+        .post(`${serverUrlV2}/posts`, {
           userId: formData.user_id,
           contentTitle: formData.content_title,
           content: formData.content,
           thumbnail: formData.thumbnail,
           // tag : 1=글, 2=그림, 3=플레이리스트
           tag: formData.tag,
-          likes: 0,
-          views: 0,
         })
         .then((res) => {
           setFormData({
