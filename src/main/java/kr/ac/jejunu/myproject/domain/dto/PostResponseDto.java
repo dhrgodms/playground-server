@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import kr.ac.jejunu.myproject.domain.Post;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -23,4 +25,18 @@ public class PostResponseDto {
     private Long views; // 조회수
     private Long likes; // 좋아요 수
     private Long commentCount;
+
+    public PostResponseDto(Post post) {
+        this.id = post.getId();
+        this.content = post.getContent();
+        this.contentTitle = post.getContentTitle();
+        this.createdDate = post.getCreatedDate();
+        this.modifiedDate = post.getModifiedDate();
+        this.version = post.getVersion();
+        this.thumbnail = post.getThumbnail();
+        this.tag = post.getTag();
+        this.views = post.getViews();
+        this.likes = post.getLikes();
+        this.commentCount = post.getCommentCount();
+    }
 }

@@ -20,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
+                .allowedOrigins("http://localhost:3000")
                 .allowedOriginPatterns("*") // 리액트 앱의 도메인
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
@@ -33,4 +34,3 @@ public class WebConfig implements WebMvcConfigurer {
                 .setCachePeriod(30);
     }
 }
-
