@@ -1,6 +1,5 @@
 package kr.ac.jejunu.myproject.AuthUser;
 
-import kr.ac.jejunu.myproject.Post.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,13 +34,11 @@ public class UserController {
             .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
             .build();
 
-
     @PostMapping("/join")
     public String join(@RequestBody User user) {
         log.info("로그인 시도됨");
 
         userRepository.save(user);
-
 
         return user.toString();
 
@@ -49,7 +46,7 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public User login(@RequestBody Map<String, String> user, @RequestHeader("User-Agent") String userAgent){
+    public User login(@RequestBody Map<String, String> user, @RequestHeader("User-Agent") String userAgent) {
         log.info("user email = {}", user.get("userEmail"));
         log.info("user agent = {}", userAgent);
 

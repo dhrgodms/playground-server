@@ -43,3 +43,8 @@ src/main/resources/application.yml
 
 .bat
 
+
+.DS_Store  
+._.DS_Store  
+**/.DS_Store  
+**/._.DS_Store
