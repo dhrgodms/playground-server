@@ -1,54 +1,41 @@
 package kr.ac.jejunu.myproject.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.ac.jejunu.myproject.domain.FileEntity;
-import kr.ac.jejunu.myproject.repository.FileDao;
-import kr.ac.jejunu.myproject.repository.PostDao;
+import lombok.RequiredArgsConstructor;
 
-import java.io.File;
 import java.io.IOException;
 
-@Service
-public class FileStorageService {
-    @Value("${file.upload-dir}")
-    private String uploadDir;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.core.sync.RequestBody;
 
-    @Autowired
-    private FileDao fileDao;
-    @Autowired
-    private PostDao postDao;
+@Service
+@RequiredArgsConstructor
+public class FileStorageService {
+
+    @Value("${spring.cloud.aws.s3.bucket}")
+    private String bucket;
+
+    private final S3Client s3Client;
 
     public String storeFile(MultipartFile file) throws IOException {
         try {
-            String absolutePath = System.getProperty("user.dir") + uploadDir;
-            // 디렉토리 확인 및 생성
-            File dir = new File(absolutePath);
-            if (!dir.exists()) {
-                dir.mkdirs(); // 디렉토리가 없으면 생성
-            }
-
-            File dest = new File(absolutePath + file.getOriginalFilename());
-            file.transferTo(dest);
-
-            saveFilePathToDatabase(uploadDir + file.getOriginalFilename());
-
-            return "File uploaded successfully: " + dest.getAbsolutePath();
+            String key = "uploads/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            s3Client.putObject(
+                    PutObjectRequest.builder()
+                            .bucket(bucket)
+                            .key(key)
+                            .contentType(file.getContentType())
+                            .build(),
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            String fileUrl = "https://" + bucket + ".s3.amazonaws.com/" + key;
+            return fileUrl;
         } catch (IOException e) {
             e.printStackTrace();
-            return "Failed to upload file";
+            throw new RuntimeException("Failed to upload file", e);
         }
-    }
-
-    private void saveFilePathToDatabase(String filePath) {
-        Long postId = postDao.findTop1ByOrderByIdDesc().getId();
-        FileEntity fileEntity = new FileEntity();
-        fileEntity.setFilePath(filePath);
-        // Ensure fileRepository is autowired or instantiated
-        fileEntity.setPostId(postId + 1);
-        fileDao.save(fileEntity);
     }
 }

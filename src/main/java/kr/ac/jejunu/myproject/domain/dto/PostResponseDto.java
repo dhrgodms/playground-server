@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import kr.ac.jejunu.myproject.domain.Post;
 
@@ -25,6 +26,7 @@ public class PostResponseDto {
     private Long views; // 조회수
     private Long likes; // 좋아요 수
     private Long commentCount;
+    private List<String> fileUrls;
 
     public PostResponseDto(Post post) {
         this.id = post.getId();
@@ -38,5 +40,13 @@ public class PostResponseDto {
         this.views = post.getViews();
         this.likes = post.getLikes();
         this.commentCount = post.getCommentCount();
+    }
+
+    public List<String> getFileUrls() {
+        return fileUrls;
+    }
+
+    public void setFileUrls(List<String> fileUrls) {
+        this.fileUrls = fileUrls;
     }
 }

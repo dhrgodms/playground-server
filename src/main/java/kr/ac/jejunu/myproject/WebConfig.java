@@ -1,11 +1,15 @@
 package kr.ac.jejunu.myproject;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -32,5 +36,12 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/files/**")
                 .addResourceLocations("file:///" + System.getProperty("user.dir") + uploadDir)
                 .setCachePeriod(30);
+    }
+
+    @Bean
+    public S3Presigner s3Presigner() {
+        return S3Presigner.builder()
+                .region(Region.of("ap-northeast-2")) // 원하는 리전으로 변경
+                .build();
     }
 }

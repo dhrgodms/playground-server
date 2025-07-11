@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 src/main/resources/application.yml
 *.env
+.env
 
 ### STS ###
 .apt_generated
@@ -27,8 +28,6 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-*.env
-src/main/resources/application.yml
 
 
 ### NetBeans ###
@@ -48,3 +47,10 @@ src/main/resources/application.yml
 ._.DS_Store  
 **/.DS_Store  
 **/._.DS_Store
+
+
+# AWS credentials (for safety, in case someone copies into project)
+.aws/
+*.aws/
+credentials
+.aws/credentials

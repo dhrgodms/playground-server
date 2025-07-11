@@ -18,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import kr.ac.jejunu.myproject.service.FileService;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/posts")
@@ -26,6 +29,7 @@ public class PostController {
 
     private final PostDao postDao;
     private final PostService postService;
+    private final FileService fileService;
 
     @Value("${myapp.hostname}")
     private String hostname;
@@ -44,13 +48,39 @@ public class PostController {
     }
 
     @PostMapping
-    public PostResponseDto add(@RequestBody PostRequestDto postRequestDto) {
-        return new PostResponseDto(postService.savePost(postRequestDto));
+    public ResponseEntity<?> savePost(@RequestBody PostRequestDto dto) {
+        Post post = postService.savePost(dto);
+        if (dto.getFileUrls() != null) {
+            for (String fileUrl : dto.getFileUrls()) {
+                fileService.save(post.getId(), fileUrl);
+            }
+        }
+        return ResponseEntity.ok(post);
     }
 
+    // @GetMapping("/{id}")
+    // public ResponseEntity<PostResponseDto> get(@PathVariable Long id) {
+    // return ResponseEntity.ok(new PostResponseDto(postService.getByPostId(id)));
+    // }
+
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDto> get(@PathVariable Long id) {
-        return ResponseEntity.ok(new PostResponseDto(postService.getByPostId(id)));
+    public ResponseEntity<PostResponseDto> getPostWithFiles(@PathVariable Long id) {
+        Post post = postService.getByPostId(id);
+        List<String> fileUrls = fileService.getFileUrlsByPostId(id);
+        PostResponseDto responseDto = new PostResponseDto(post);
+        responseDto.setFileUrls(fileUrls);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/{id}/files")
+    public ResponseEntity<?> addFilesToPost(@PathVariable Long id, @RequestBody Map<String, List<String>> request) {
+        List<String> fileUrls = request.get("fileUrls");
+        if (fileUrls != null) {
+            for (String fileUrl : fileUrls) {
+                fileService.save(id, fileUrl);
+            }
+        }
+        return ResponseEntity.ok().body(Map.of("message", "Files added successfully"));
     }
 
     @PutMapping("/{id}")
@@ -103,5 +133,4 @@ public class PostController {
         post.setThumbnail(hostname + ":8080/thumbnail/white.jpg");
         postDao.save(post);
     }
-
 }
