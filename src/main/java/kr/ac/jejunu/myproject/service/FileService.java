@@ -19,6 +19,15 @@ public class FileService {
         fileDao.save(fileEntity);
     }
 
+    public void update(Long postId, String fileUrl) {
+        List<FileEntity> files = fileDao.findByPostId(postId);
+        fileDao.deleteAll(files);
+        FileEntity newFileEntity = new FileEntity();
+        newFileEntity.setPostId(postId);
+        newFileEntity.setFilePath(fileUrl);
+        fileDao.save(newFileEntity);
+    }
+
     public List<String> getFileUrlsByPostId(Long postId) {
         return fileDao.findByPostId(postId)
                 .stream()

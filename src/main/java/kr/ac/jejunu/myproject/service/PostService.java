@@ -21,11 +21,12 @@ public class PostService {
 
     private final PostDao postDao;
     private final CommentDao commentDao;
+    private final FileService fileService;
 
     public Post getByPostId(Long id) {
         Post post = postDao.findById(id).get();
         post.setViews(post.getViews() + 1);
-        return postDao.save(post);
+        return post;
     }
 
     public Page<Post> getAllPosts(Pageable pageable) {
@@ -40,7 +41,7 @@ public class PostService {
         Post post = new Post(postRequestDto.getContent(), postRequestDto.getContentTitle());
         post.setTag(postRequestDto.getTag());
         post.setThumbnail(postRequestDto.getThumbnail());
-        return postDao.save(post);
+        return post;
     }
 
     public Post updatePost(PostUpdateDto postUpdateDto) {
@@ -48,7 +49,8 @@ public class PostService {
         post.setContentTitle(postUpdateDto.getContentTitle());
         post.setContent(postUpdateDto.getContent());
         post.setThumbnail(postUpdateDto.getThumbnail());
-        return postDao.save(post);
+        postUpdateDto.getFileUrls().forEach(fileUrl -> fileService.update(postUpdateDto.getId(), fileUrl));
+        return post;
     }
 
     public void deletePost(Long id) {
@@ -62,7 +64,6 @@ public class PostService {
     public void likePost(Long id) {
         Post post = postDao.findById(id).get();
         post.setLikes(post.getLikes() + 1);
-        postDao.save(post);
     }
 
     public Long getLikes(Long id) {
