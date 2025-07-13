@@ -5,7 +5,7 @@ import kr.ac.jejunu.myproject.domain.Post;
 import kr.ac.jejunu.myproject.domain.dto.PostRequestDto;
 import kr.ac.jejunu.myproject.domain.dto.PostResponseDto;
 import kr.ac.jejunu.myproject.domain.dto.PostUpdateDto;
-import kr.ac.jejunu.myproject.repository.PostDao;
+import kr.ac.jejunu.myproject.repository.PostRepository;
 import kr.ac.jejunu.myproject.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,14 +20,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import kr.ac.jejunu.myproject.service.FileService;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v2/posts")
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostDao postDao;
+    private final PostRepository postRepository;
     private final PostService postService;
     private final FileService fileService;
 
@@ -38,10 +37,10 @@ public class PostController {
     private String uploadDir;
 
     @GetMapping
-    public ResponseEntity<Page<PostResponseDto>> getAllPosts(@RequestParam(required = false) Integer tag,
+    public ResponseEntity<Page<PostResponseDto>> getAllPosts(@RequestParam(required = false) Integer categoryId,
             Pageable pageable) {
-        if (tag != null) {
-            return ResponseEntity.ok(postService.getTagPosts(tag, pageable).map(PostResponseDto::new));
+        if (categoryId != null) {
+            return ResponseEntity.ok(postService.getPostsByCategoryId(categoryId, pageable).map(PostResponseDto::new));
         }
         Page<Post> posts = postService.getAllPosts(pageable);
         return ResponseEntity.ok(posts.map(PostResponseDto::new));
@@ -57,11 +56,6 @@ public class PostController {
         }
         return ResponseEntity.ok(post);
     }
-
-    // @GetMapping("/{id}")
-    // public ResponseEntity<PostResponseDto> get(@PathVariable Long id) {
-    // return ResponseEntity.ok(new PostResponseDto(postService.getByPostId(id)));
-    // }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDto> getPostWithFiles(@PathVariable Long id) {
@@ -129,8 +123,8 @@ public class PostController {
 
     @GetMapping("/thumbnail-delete/{id}") // TODO 손보기
     public void deleteThumbnail(@PathVariable Long id) {
-        Post post = postDao.findById(id).get();
+        Post post = postRepository.findById(id).get();
         post.setThumbnail(hostname + ":8080/thumbnail/white.jpg");
-        postDao.save(post);
+        postRepository.save(post);
     }
 }

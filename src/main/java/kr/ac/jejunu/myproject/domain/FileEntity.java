@@ -4,10 +4,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FileEntity {
 
     @Id
@@ -17,7 +21,6 @@ public class FileEntity {
     private String filePath;
     private Long postId;
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -32,5 +35,10 @@ public class FileEntity {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public FileEntity(String filePath, Long postId) {
+        this.filePath = filePath;
+        this.postId = postId;
     }
 }

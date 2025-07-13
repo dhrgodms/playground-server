@@ -13,18 +13,14 @@ public class FileService {
     private final FileDao fileDao;
 
     public void save(Long postId, String fileUrl) {
-        FileEntity fileEntity = new FileEntity();
-        fileEntity.setPostId(postId);
-        fileEntity.setFilePath(fileUrl);
+        FileEntity fileEntity = new FileEntity(fileUrl,postId);
         fileDao.save(fileEntity);
     }
 
     public void update(Long postId, String fileUrl) {
         List<FileEntity> files = fileDao.findByPostId(postId);
         fileDao.deleteAll(files);
-        FileEntity newFileEntity = new FileEntity();
-        newFileEntity.setPostId(postId);
-        newFileEntity.setFilePath(fileUrl);
+        FileEntity newFileEntity = new FileEntity(fileUrl,postId);
         fileDao.save(newFileEntity);
     }
 

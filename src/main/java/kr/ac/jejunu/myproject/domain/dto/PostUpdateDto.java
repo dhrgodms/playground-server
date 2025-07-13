@@ -13,7 +13,8 @@ public class PostUpdateDto {
     private Long id;
     private String content;
     private String contentTitle;
-    private Integer tag;
+    private List<Long> tags;
+    private Long categoryId;
     private String thumbnail;
     private List<String> fileUrls;
 }

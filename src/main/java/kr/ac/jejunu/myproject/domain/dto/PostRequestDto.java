@@ -12,8 +12,9 @@ import java.util.List;
 public class PostRequestDto {
     private String content;
     private String contentTitle;
-    private Integer tag;
+    private List<Long> tags;
     private String thumbnail;
+    private Long categoryId = 1L;
     private List<String> fileUrls;
 
     public List<String> getFileUrls() {

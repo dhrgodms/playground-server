@@ -1,5 +1,8 @@
 package kr.ac.jejunu.myproject.domain.dto;
 
+import kr.ac.jejunu.myproject.domain.Category;
+import kr.ac.jejunu.myproject.domain.PostTag;
+import kr.ac.jejunu.myproject.domain.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +25,8 @@ public class PostResponseDto {
     private LocalDateTime modifiedDate;
     private Long version;
     String thumbnail;
-    private int tag; // 1=글, 2=그림, 3=플레이리스트
+    private List<TagResponseDto> tags;
+    private CategoryResponseDto category;
     private Long views; // 조회수
     private Long likes; // 좋아요 수
     private Long commentCount;
@@ -33,14 +37,17 @@ public class PostResponseDto {
         this.content = post.getContent();
         this.contentTitle = post.getContentTitle();
         this.createdDate = post.getCreatedDate();
-        this.modifiedDate = post.getModifiedDate();
+        this.modifiedDate = post.getLastModifiedDate();
+        //this.category도 따로 매핑
         this.version = post.getVersion();
         this.thumbnail = post.getThumbnail();
-        this.tag = post.getTag();
+        //this.tags는 따로 매핑
         this.views = post.getViews();
         this.likes = post.getLikes();
         this.commentCount = post.getCommentCount();
     }
+
+
 
     public List<String> getFileUrls() {
         return fileUrls;
