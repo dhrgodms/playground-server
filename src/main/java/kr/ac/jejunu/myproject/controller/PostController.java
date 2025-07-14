@@ -1,25 +1,34 @@
 package kr.ac.jejunu.myproject.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.servlet.http.HttpServletRequest;
 import kr.ac.jejunu.myproject.domain.Post;
 import kr.ac.jejunu.myproject.domain.dto.PostRequestDto;
 import kr.ac.jejunu.myproject.domain.dto.PostResponseDto;
 import kr.ac.jejunu.myproject.domain.dto.PostUpdateDto;
 import kr.ac.jejunu.myproject.repository.PostRepository;
+import kr.ac.jejunu.myproject.service.FileService;
 import kr.ac.jejunu.myproject.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import kr.ac.jejunu.myproject.service.FileService;
 
 @RestController
 @RequestMapping("/api/v2/posts")
@@ -54,16 +63,15 @@ public class PostController {
                 fileService.save(post.getId(), fileUrl);
             }
         }
-        return ResponseEntity.ok(post);
+        return ResponseEntity.ok(new PostResponseDto(post));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDto> getPostWithFiles(@PathVariable Long id) {
         Post post = postService.getByPostId(id);
         List<String> fileUrls = fileService.getFileUrlsByPostId(id);
-        PostResponseDto responseDto = new PostResponseDto(post);
-        responseDto.setFileUrls(fileUrls);
-        return ResponseEntity.ok(responseDto);
+        // fileUrls는 별도로 처리하거나 post에 추가
+        return ResponseEntity.ok(new PostResponseDto(post));
     }
 
     @PostMapping("/{id}/files")
@@ -78,9 +86,10 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public PostResponseDto update(@PathVariable Long id, @RequestBody PostUpdateDto postUpdateDto) {
+    public ResponseEntity<PostResponseDto> update(@PathVariable Long id, @RequestBody PostUpdateDto postUpdateDto) {
         postUpdateDto.setId(id);
-        return new PostResponseDto(postService.updatePost(postUpdateDto));
+        Post updatedPost = postService.updatePost(postUpdateDto);
+        return ResponseEntity.ok(new PostResponseDto(updatedPost));
     }
 
     @DeleteMapping("/{id}")
@@ -96,8 +105,12 @@ public class PostController {
     }
 
     @GetMapping("/main-posts") // TODO 손보기
-    public List<Post> getRecentPosts() {
-        return postService.getRecentPostsByAllTags();
+    public ResponseEntity<List<PostResponseDto>> getRecentPosts() {
+        List<Post> posts = postService.getRecentPostsByAllTags();
+        List<PostResponseDto> responseDtos = posts.stream()
+                .map(PostResponseDto::new)
+                .toList();
+        return ResponseEntity.ok(responseDtos);
     }
 
     @PostMapping("/thumbnail-upload") // TODO 손보기

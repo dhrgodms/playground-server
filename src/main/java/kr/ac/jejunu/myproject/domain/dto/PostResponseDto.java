@@ -1,17 +1,14 @@
 package kr.ac.jejunu.myproject.domain.dto;
 
-import kr.ac.jejunu.myproject.domain.Category;
-import kr.ac.jejunu.myproject.domain.PostTag;
-import kr.ac.jejunu.myproject.domain.Tag;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import kr.ac.jejunu.myproject.domain.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import kr.ac.jejunu.myproject.domain.Post;
 
 @Data
 @Builder
@@ -38,16 +35,24 @@ public class PostResponseDto {
         this.contentTitle = post.getContentTitle();
         this.createdDate = post.getCreatedDate();
         this.modifiedDate = post.getLastModifiedDate();
-        //this.category도 따로 매핑
         this.version = post.getVersion();
         this.thumbnail = post.getThumbnail();
-        //this.tags는 따로 매핑
         this.views = post.getViews();
         this.likes = post.getLikes();
         this.commentCount = post.getCommentCount();
+
+        // Category 매핑
+        if (post.getCategory() != null) {
+            this.category = new CategoryResponseDto(post.getCategory());
+        }
+
+        // Tags 매핑
+        if (post.getPostTags() != null && !post.getPostTags().isEmpty()) {
+            this.tags = post.getPostTags().stream()
+                    .map(postTag -> new TagResponseDto(postTag.getTag()))
+                    .collect(Collectors.toList());
+        }
     }
-
-
 
     public List<String> getFileUrls() {
         return fileUrls;

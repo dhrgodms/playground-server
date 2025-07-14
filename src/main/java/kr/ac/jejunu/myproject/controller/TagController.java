@@ -8,12 +8,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v2/tags")
 @RequiredArgsConstructor
 public class TagController {
 
     private final TagRepository tagRepository;
+
+    @GetMapping
+    public ResponseEntity<?> getAllTags() {
+        List<Tag> allTags = tagRepository.findAll();
+        return ResponseEntity.ok(allTags.stream().map(t -> new TagResponseDto(t)));
+    }
 
     @PostMapping
     public ResponseEntity<?> createTag(@RequestBody TagRequestDto tagRequestDto) {

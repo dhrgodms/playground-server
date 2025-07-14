@@ -1,22 +1,28 @@
 package kr.ac.jejunu.myproject.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
-@Data
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Version;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 불필요한 기본 생성자를 만들지 않는다.
-public class Post extends BaseTimeEntity{
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +37,8 @@ public class Post extends BaseTimeEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
     @OneToMany(mappedBy = "post")
-    private Set<PostTag> postTags;
+    @JsonManagedReference
+    private Set<PostTag> postTags = new HashSet<>();
     private Long views = 0L; // 조회수
     private Long likes = 0L; // 좋아요 수
     private Long commentCount = 0L;
@@ -47,5 +54,29 @@ public class Post extends BaseTimeEntity{
 
     public void addPostTag(PostTag postTag) {
         this.postTags.add(postTag);
+    }
+
+    public void setViews(Long views) {
+        this.views = views;
+    }
+
+    public void setLikes(Long likes) {
+        this.likes = likes;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setContentTitle(String contentTitle) {
+        this.contentTitle = contentTitle;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
     }
 }

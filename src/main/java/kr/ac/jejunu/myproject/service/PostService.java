@@ -3,19 +3,19 @@ package kr.ac.jejunu.myproject.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.ac.jejunu.myproject.domain.PostTag;
-import kr.ac.jejunu.myproject.repository.CategoryRepository;
-import kr.ac.jejunu.myproject.repository.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kr.ac.jejunu.myproject.domain.Comment;
 import kr.ac.jejunu.myproject.domain.Post;
+import kr.ac.jejunu.myproject.domain.PostTag;
 import kr.ac.jejunu.myproject.domain.dto.PostRequestDto;
 import kr.ac.jejunu.myproject.domain.dto.PostUpdateDto;
+import kr.ac.jejunu.myproject.repository.CategoryRepository;
 import kr.ac.jejunu.myproject.repository.CommentRepository;
 import kr.ac.jejunu.myproject.repository.PostRepository;
+import kr.ac.jejunu.myproject.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -28,7 +28,6 @@ public class PostService {
     private final TagRepository tagRepository;
     private final CategoryRepository categoryRepository;
 
-
     public Post getByPostId(Long id) {
         Post post = postRepository.findById(id).get();
         post.setViews(post.getViews() + 1);
@@ -40,7 +39,7 @@ public class PostService {
     }
 
     public Page<Post> getTagPosts(Integer tag, Pageable pageable) {
-//        return postRepository.findAllByTag(tag, pageable);
+        // return postRepository.findAllByTag(tag, pageable);
         return null;
     }
 
@@ -51,9 +50,8 @@ public class PostService {
     public Post savePost(PostRequestDto postRequestDto) {
         Post post = new Post(postRequestDto.getContent(), postRequestDto.getContentTitle());
         postRequestDto.getTags().forEach(tagId -> {
-                    post.addPostTag(new PostTag(post, tagRepository.findById(tagId).orElse(null)));
-                }
-        );
+            new PostTag(post, tagRepository.findById(tagId).orElse(null));
+        });
         post.setCategory(categoryRepository.findById(postRequestDto.getCategoryId()).get());
         post.setThumbnail(postRequestDto.getThumbnail());
         return postRepository.save(post);
@@ -64,13 +62,12 @@ public class PostService {
         post.setContentTitle(postUpdateDto.getContentTitle());
         post.setContent(postUpdateDto.getContent());
         postUpdateDto.getTags().forEach(tagId -> {
-                    post.addPostTag(new PostTag(post, tagRepository.findById(tagId).orElse(null)));
-                }
-        );
+            new PostTag(post, tagRepository.findById(tagId).orElse(null));
+        });
         post.setThumbnail(postUpdateDto.getThumbnail());
         post.setCategory(categoryRepository.findById(postUpdateDto.getCategoryId()).orElse(null));
 
-        if(postUpdateDto.getFileUrls() != null) {
+        if (postUpdateDto.getFileUrls() != null) {
             postUpdateDto.getFileUrls().forEach(fileUrl -> fileService.update(postUpdateDto.getId(), fileUrl));
         }
         return post;
@@ -99,9 +96,12 @@ public class PostService {
         try {
             postList.add(postRepository.findTop1ByOrderByViewsDesc()); // 인기글 // 조회수 내림차순 첫번째
             postList.add(postRepository.findTop1ByOrderByIdDesc()); // 최신글 // 업로드 날짜 제일 빠른 게시글
-            postList.addAll(postRepository.findTop2ByCategoryOrderByCreatedDateDesc(categoryRepository.findByCategoryName("프로젝트")));
-            postList.addAll(postRepository.findTop2ByCategoryOrderByCreatedDateDesc(categoryRepository.findByCategoryName("TIL")));
-            postList.addAll(postRepository.findTop2ByCategoryOrderByCreatedDateDesc(categoryRepository.findByCategoryName("이슈해결")));
+            postList.addAll(postRepository
+                    .findTop2ByCategoryOrderByCreatedDateDesc(categoryRepository.findByCategoryName("프로젝트")));
+            postList.addAll(postRepository
+                    .findTop2ByCategoryOrderByCreatedDateDesc(categoryRepository.findByCategoryName("TIL")));
+            postList.addAll(postRepository
+                    .findTop2ByCategoryOrderByCreatedDateDesc(categoryRepository.findByCategoryName("이슈해결")));
 
             // TODO n+1 해결
             postList = postList.stream()
